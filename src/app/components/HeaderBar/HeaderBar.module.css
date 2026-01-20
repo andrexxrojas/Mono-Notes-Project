@@ -35,7 +35,7 @@
     outline: none;
     border: none;
     background-color: var(--btn-bg);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn:hover {
@@ -43,7 +43,7 @@
 }
 
 .btn.close {
-    transition: background-color  0.3s ease, color 0.3s ease;
+    transition: background-color  0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn.close:hover {
