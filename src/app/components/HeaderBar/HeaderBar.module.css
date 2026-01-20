@@ -2,6 +2,7 @@
     background-color: var(--titlebar-bg);
     width: 100%;
     height: var(--titlebar-height);
+    border-bottom: 1px solid var(--titlebar-border);
     position: fixed;
     top: 0;
     left: 0;
@@ -34,12 +35,12 @@
     cursor: default;
     outline: none;
     border: none;
-    background-color: var(--btn-bg);
+    background-color: transparent;
     transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .window-btn:hover {
-    background-color: var(--btn-bg-hover);
+    background-color: var(--window-btn-bg-hover);
 }
 
 .window-btn.close {
@@ -47,16 +48,37 @@
 }
 
 .window-btn.close:hover {
-    background-color: var(--btn-close-bg-hover);
+    background-color: var(--window-btn-close-bg-hover);
     color: #FFFFFF;
 }
 
 .branding {
+    gap: 12px;
+    height: 100%;
     display: flex;
     align-items: center;
-    gap: 12px;
+    padding-inline: 12px;
 }
 
 .application-name {
     font-family: var(--font-regular);
+    font-size: var(--font-size-base);
+}
+
+.btn {
+    border: none;
+    outline: none;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--btn-border-radius);
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--icon-primary);
+    transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:hover {
+    background-color: var(--btn-bg-hover);
 }

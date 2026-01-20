@@ -12,11 +12,22 @@
     --font-semibold: 'Manrope SemiBold', sans-serif;
     --font-bold: 'Manrope Bold', sans-serif;
 
+    /* FONT SIZE */
+    --font-size-xxl: 45px;
+    --font-size-xl: 37px;
+    --font-size-lg: 31px;
+    --font-size-md: 26px;
+    --font-size-sm-md: 22px;
+    --font-size-sm: 18px;
+    --font-size-base: 15px;
+    --font-size-xs: 13px;
+
     /* LIGHT MODE */
     --background: #EAEAEA;
     --code-block: #F5F5F5;
     --editor-bg: #FFFFFF;
     --border: #D0D0D0;
+    --icon-primary: #AAAAAA;
     --text-secondary: #6D6D6D;
     --text-foreground: #3D3D3D;
     --accent: #39DD50;
@@ -24,9 +35,16 @@
     /* TITLE BAR */
     --titlebar-bg: #F8F8F7;
     --titlebar-height: 35px;
-    --btn-bg: #F5F5F5;
+    --titlebar-border: #EEEEEC;
+
+    /* WINDOW BUTTON */
+    --window-btn-bg: #F5F5F5;
+    --window-btn-bg-hover: #D8D8D7;
+    --window-btn-close-bg-hover: #E81123;
+
+    /* GENERIC BUTTON */
     --btn-bg-hover: #D8D8D7;
-    --btn-close-bg-hover: #E81123;
+    --btn-border-radius: 6px;
 }
 
 

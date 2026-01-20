@@ -15,21 +15,21 @@ export default function HeaderBar() {
         <div className={styles["title-bar"]} data-tauri-drag-region>
 
             <div className={styles["branding"]}>
-                <h4 className={styles["application-name"]}>Mono</h4>
+                {/* APPLICATION NAME OR ICON TO BE ADDED */}
                 <button className={`${styles["btn"]} ${styles["sidebar"]}`}>
-                    <SidebarSimpleIcon size={14} />
+                    <SidebarSimpleIcon size={20} />
                 </button>
             </div>
 
             <div className={styles["controls"]}>
                 <button className={`${styles["window-btn"]} ${styles["minimize"]}`} onClick={minimize}>
-                    <MinusIcon size={14} />
+                    <MinusIcon size={13} />
                 </button>
                 <button className={`${styles["window-btn"]} ${styles["maximize"]}`} onClick={maximize}>
-                    <SquareIcon size={13} />
+                    <SquareIcon size={12} />
                 </button>
                 <button className={`${styles["window-btn"]} ${styles["close"]}`} onClick={close}>
-                    <XIcon size={17} />
+                    <XIcon size={15} />
                 </button>
             </div>
         </div>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { light, regular, medium, semibold, bold } from "./fonts";
 import styles from "./layout.module.css";
 import HeaderBar from "@/app/components/HeaderBar/HeaderBar";
+import { light, regular, medium, semibold, bold } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Mono",
