@@ -1,11 +1,10 @@
 "use client";
 
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { XIcon, MinusIcon, SquareIcon } from "@phosphor-icons/react";
+import { XIcon, MinusIcon, SquareIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
 import styles from "./HeaderBar.module.css";
 
 export default function HeaderBar() {
-    // get the current Tauri window
     const appWindow = getCurrentWindow();
 
     const minimize = async () => await appWindow.minimize();
@@ -13,17 +12,23 @@ export default function HeaderBar() {
     const close = async () => await appWindow.close();
 
     return (
-        <div className={styles["title-bar"]}>
-            <div data-tauri-drag-region></div>
+        <div className={styles["title-bar"]} data-tauri-drag-region>
+
+            <div className={styles["branding"]}>
+                <h4 className={styles["application-name"]}>Mono</h4>
+                <button className={`${styles["btn"]} ${styles["sidebar"]}`}>
+                    <SidebarSimpleIcon size={14} />
+                </button>
+            </div>
 
             <div className={styles["controls"]}>
-                <button className={`${styles["btn"]} ${styles["minimize"]}`} onClick={minimize}>
+                <button className={`${styles["window-btn"]} ${styles["minimize"]}`} onClick={minimize}>
                     <MinusIcon size={14} />
                 </button>
-                <button className={`${styles["btn"]} ${styles["maximize"]}`} onClick={maximize}>
+                <button className={`${styles["window-btn"]} ${styles["maximize"]}`} onClick={maximize}>
                     <SquareIcon size={13} />
                 </button>
-                <button className={`${styles["btn"]} ${styles["close"]}`} onClick={close}>
+                <button className={`${styles["window-btn"]} ${styles["close"]}`} onClick={close}>
                     <XIcon size={17} />
                 </button>
             </div>

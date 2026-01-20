@@ -5,6 +5,13 @@
 }
 
 :root {
+    /* FONT FAMILY */;
+    --font-light: 'Manrope Light', sans-serif;
+    --font-regular: 'Manrope Regular', sans-serif;
+    --font-medium: 'Manrope Medium', sans-serif;
+    --font-semibold: 'Manrope SemiBold', sans-serif;
+    --font-bold: 'Manrope Bold', sans-serif;
+
     /* LIGHT MODE */
     --background: #EAEAEA;
     --code-block: #F5F5F5;
@@ -16,6 +23,7 @@
 
     /* TITLE BAR */
     --titlebar-bg: #F8F8F7;
+    --titlebar-height: 35px;
     --btn-bg: #F5F5F5;
     --btn-bg-hover: #D8D8D7;
     --btn-close-bg-hover: #E81123;

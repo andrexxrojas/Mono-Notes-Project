@@ -1,7 +1,7 @@
 .title-bar {
     background-color: var(--titlebar-bg);
     width: 100%;
-    height: 35px;
+    height: var(--titlebar-height);
     position: fixed;
     top: 0;
     left: 0;
@@ -24,8 +24,8 @@
     height: 100%;
 }
 
-.btn {
-    height: 35px;
+.window-btn {
+    height: var(--titlebar-height);
     width: 45px;
     display: flex;
     justify-content: center;
@@ -38,15 +38,25 @@
     transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn:hover {
+.window-btn:hover {
     background-color: var(--btn-bg-hover);
 }
 
-.btn.close {
+.window-btn.close {
     transition: background-color  0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn.close:hover {
+.window-btn.close:hover {
     background-color: var(--btn-close-bg-hover);
     color: #FFFFFF;
+}
+
+.branding {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.application-name {
+    font-family: var(--font-regular);
 }

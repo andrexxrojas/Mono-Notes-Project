@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { light, regular, medium, semibold, bold } from "./fonts";
+import styles from "./layout.module.css";
 import HeaderBar from "@/app/components/HeaderBar/HeaderBar";
 
 export const metadata: Metadata = {
@@ -12,10 +14,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+        lang="en"
+        className={`${light.variable} ${regular.variable} ${medium.variable} ${semibold.variable} ${bold.variable}`}
+    >
       <body>
         <HeaderBar/>
-        {children}
+        <main className={styles["main-container"]}>
+            {children}
+        </main>
       </body>
     </html>
   );
