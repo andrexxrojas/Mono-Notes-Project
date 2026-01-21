@@ -5,11 +5,20 @@ import { XIcon, MinusIcon, SquareIcon, SidebarSimpleIcon } from "@phosphor-icons
 import styles from "./HeaderBar.module.css";
 
 export default function HeaderBar() {
-    const appWindow = getCurrentWindow();
+    const minimize = async () => {
+        const win = getCurrentWindow();
+        await win.minimize();
+    };
 
-    const minimize = async () => await appWindow.minimize();
-    const maximize = async () => await appWindow.toggleMaximize();
-    const close = async () => await appWindow.close();
+    const maximize = async () => {
+        const win = getCurrentWindow();
+        await win.toggleMaximize();
+    };
+
+    const close = async () => {
+        const win = getCurrentWindow();
+        await win.close();
+    };
 
     return (
         <div className={styles["title-bar"]} data-tauri-drag-region>
