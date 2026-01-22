@@ -48,10 +48,11 @@
 
     /* SIDEBAR */
     --sidebar-bg: #F8F8F7;
-    --sidebar-width: 300px;
+    --sidebar-width: 260px;
     --sidebar-min-width: 240px;
     --sidebar-max-width: 478px;
     --sidebar-border: #EEEEEC;
+    --sidebar-resizer-border-hover: #AAAAAA;
 }
 
 

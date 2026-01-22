@@ -13,7 +13,7 @@ export default function SideBarWrapper({ children }: { children: React.ReactNode
         <>
             <HeaderBar onToggleSidebarAction={toggleSidebar} />
             <div className={styles["app-shell"]}>
-                {sidebarOpen && <SideBar />}
+                <SideBar isOpen={sidebarOpen} />
                 <main className={styles["main-container"]}>{children}</main>
             </div>
         </>
