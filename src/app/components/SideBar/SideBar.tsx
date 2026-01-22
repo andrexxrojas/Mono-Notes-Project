@@ -3,7 +3,7 @@
 import styles from "./SideBar.module.css";
 import { useRef, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { Settings } from "@/types/Settings";
+import { loadSettings, updateSettings } from "@/utils/settings";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -15,15 +15,19 @@ export default function SideBar({ isOpen }: SideBarProps) {
     const widthRef = useRef(260);
 
     useEffect(() => {
-        (async () => {
+        const loadSidebarWidth = async () => {
             try {
-                const settings: { sidebar_width: number } = await invoke("load_settings");
+                const settings = await loadSettings();
                 widthRef.current = settings.sidebar_width;
-                if (sidebarRef.current) sidebarRef.current.style.width = `${settings.sidebar_width}px`;
+                if (sidebarRef.current) {
+                    sidebarRef.current.style.width = `${settings.sidebar_width}px`;
+                }
             } catch (err) {
                 console.error("Failed to load sidebar width:", err);
             }
-        })();
+        };
+
+        void loadSidebarWidth();
     }, []);
 
     useEffect(() => {
@@ -53,16 +57,8 @@ export default function SideBar({ isOpen }: SideBarProps) {
             document.removeEventListener("mouseup", onMouseUp);
 
             try {
-                console.log("About to load settings...");
-                const settings = await invoke<Settings>("load_settings");
-
-                const newSettings = {
-                    ...settings,
-                    sidebar_width: widthRef.current,
-                };
-
-                const result = await invoke("save_settings", { settings: newSettings });
-                console.log("Result after saving:",result);
+                await updateSettings({ sidebar_width: widthRef.current });
+                console.log("Settings saved successfully");
             } catch (err) {
                 console.error("Failed to save sidebar width:", err);
             }
