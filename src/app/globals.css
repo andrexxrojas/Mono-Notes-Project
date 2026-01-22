@@ -45,6 +45,13 @@
     /* GENERIC BUTTON */
     --btn-bg-hover: #D8D8D7;
     --btn-border-radius: 6px;
+
+    /* SIDEBAR */
+    --sidebar-bg: #F8F8F7;
+    --sidebar-width: 300px;
+    --sidebar-min-width: 240px;
+    --sidebar-max-width: 478px;
+    --sidebar-border: #EEEEEC;
 }
 
 

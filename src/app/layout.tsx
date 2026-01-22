@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import styles from "./layout.module.css";
-import HeaderBar from "@/app/components/HeaderBar/HeaderBar";
+import React from "react";
+import type { Metadata } from "next";
 import { light, regular, medium, semibold, bold } from "./fonts";
+import SideBarWrapper from "@/app/components/SideBarWrapper/SideBarWrapper";
 
 export const metadata: Metadata = {
   title: "Mono",
@@ -19,10 +19,9 @@ export default function RootLayout({
         className={`${light.variable} ${regular.variable} ${medium.variable} ${semibold.variable} ${bold.variable}`}
     >
       <body>
-        <HeaderBar/>
-        <main className={styles["main-container"]}>
-            {children}
-        </main>
+        <SideBarWrapper>
+          {children}
+        </SideBarWrapper>
       </body>
     </html>
   );

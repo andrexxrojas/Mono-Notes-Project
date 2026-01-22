@@ -1,0 +1,9 @@
+.sidebar {
+    background-color: var(--sidebar-bg);
+    min-width: var(--sidebar-min-width);
+    flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid var(--sidebar-border);
+}
+

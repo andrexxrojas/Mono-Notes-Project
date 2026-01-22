@@ -4,7 +4,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { XIcon, MinusIcon, SquareIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
 import styles from "./HeaderBar.module.css";
 
-export default function HeaderBar() {
+export default function HeaderBar({ onToggleSidebarAction }: { onToggleSidebarAction: () => void }) {
     const minimize = async () => {
         const win = getCurrentWindow();
         await win.minimize();
@@ -25,7 +25,10 @@ export default function HeaderBar() {
 
             <div className={styles["branding"]}>
                 {/* APPLICATION NAME OR ICON TO BE ADDED */}
-                <button className={`${styles["btn"]} ${styles["sidebar"]}`}>
+                <button
+                    className={`${styles["btn"]} ${styles["sidebar"]}`}
+                    onClick={onToggleSidebarAction}
+                >
                     <SidebarSimpleIcon size={20} />
                 </button>
             </div>

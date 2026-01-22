@@ -1,3 +1,5 @@
-.main-container {
+.app-shell {
     margin-top: var(--titlebar-height);
+    height: calc(100vh - var(--titlebar-height));
+    display: flex;
 }
