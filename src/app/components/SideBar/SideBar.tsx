@@ -2,6 +2,8 @@
 
 import styles from "./SideBar.module.css";
 import { useRef, useEffect } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import { Settings } from "@/types/Settings";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -10,7 +12,22 @@ interface SideBarProps {
 export default function SideBar({ isOpen }: SideBarProps) {
     const resizerRef = useRef<HTMLDivElement>(null);
     const sidebarRef = useRef<HTMLElement>(null);
+    const widthRef = useRef(260);
 
+    // For loading saved width
+    useEffect(() => {
+        (async () => {
+            try {
+                const settings: { sidebar_width: number } = await invoke("load_settings");
+                widthRef.current = settings.sidebar_width;
+                if (sidebarRef.current) sidebarRef.current.style.width = `${settings.sidebar_width}px`;
+            } catch (err) {
+                console.error("Failed to load sidebar width:", err);
+            }
+        })();
+    }, []);
+
+    // For resizing
     useEffect(() => {
         const sidebar = sidebarRef.current;
         const resizer = resizerRef.current;
@@ -29,12 +46,28 @@ export default function SideBar({ isOpen }: SideBarProps) {
             if (newWidth > maxWidth) newWidth = maxWidth;
 
             sidebar.style.width = `${newWidth}px`;
+            widthRef.current = newWidth;
         };
 
-        const onMouseUp = () => {
+        const onMouseUp = async () => {
             isResizing = false;
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
+
+            try {
+                console.log("About to load settings...");
+                const settings = await invoke<Settings>("load_settings");
+
+                const newSettings = {
+                    ...settings,
+                    sidebar_width: widthRef.current,
+                };
+
+                const result = await invoke("save_settings", { settings: newSettings });
+                console.log("Result after saving:",result);
+            } catch (err) {
+                console.error("Failed to save sidebar width:", err);
+            }
         };
 
         const onMouseDown = (e: MouseEvent) => {
