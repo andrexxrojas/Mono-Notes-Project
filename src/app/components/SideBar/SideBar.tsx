@@ -14,7 +14,6 @@ export default function SideBar({ isOpen }: SideBarProps) {
     const sidebarRef = useRef<HTMLElement>(null);
     const widthRef = useRef(260);
 
-    // For loading saved width
     useEffect(() => {
         (async () => {
             try {
@@ -27,7 +26,6 @@ export default function SideBar({ isOpen }: SideBarProps) {
         })();
     }, []);
 
-    // For resizing
     useEffect(() => {
         const sidebar = sidebarRef.current;
         const resizer = resizerRef.current;
