@@ -21,6 +21,8 @@
     --font-size-sm: 18px;
     --font-size-base: 15px;
     --font-size-xs: 13px;
+    --font-size-xxs: 11px;
+    --font-size-xxxs: 9px;
 
     /* LIGHT MODE */
     --background: #EAEAEA;
@@ -28,7 +30,7 @@
     --editor-bg: #FFFFFF;
     --border: #D0D0D0;
     --icon-primary: #AAAAAA;
-    --text-secondary: #6D6D6D;
+    --text-secondary: #91918E;
     --text-foreground: #3D3D3D;
     --accent: #39DD50;
 
@@ -43,16 +45,26 @@
     --window-btn-close-bg-hover: #E81123;
 
     /* GENERIC BUTTON */
-    --btn-bg-hover: #D8D8D7;
+    --btn-bg-hover: #F1F0EF;
     --btn-border-radius: 6px;
 
     /* SIDEBAR */
-    --sidebar-bg: #F8F8F7;
+    --sidebar-bg: #F9F8F7;
     --sidebar-width: 260px;
     --sidebar-min-width: 240px;
     --sidebar-max-width: 478px;
     --sidebar-border: #EEEEEC;
+    --sidebar-padding: 14px;
     --sidebar-resizer-border-hover: #AAAAAA;
+
+    /* SIDEBAR MICROLABEL */
+    --sidebar-microlabel-color: #91918E;
+    --sidebar-microlabel-spacing: 8px;
+
+    /* SIDEBAR TAB */
+    --sidebar-tab-border-radius: 6px;
+    --sidebar-tab-hover-bg: #F1F0EF;
+
 }
 
 

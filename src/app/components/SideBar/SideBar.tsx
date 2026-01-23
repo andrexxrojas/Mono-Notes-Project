@@ -2,8 +2,9 @@
 
 import styles from "./SideBar.module.css";
 import { useRef, useEffect } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { loadSettings, updateSettings } from "@/utils/settings";
+import { MagnifyingGlassIcon, HouseIcon, GearIcon, TrashIcon, PlusIcon } from "@phosphor-icons/react";
+import Tab from "@/app/components/SideBarTab/SideBarTab";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -82,7 +83,27 @@ export default function SideBar({ isOpen }: SideBarProps) {
         <div className={`${styles["sidebar-container"]} ${isOpen ? styles["open"] : styles["closed"]}`}>
             <aside ref={sidebarRef} className={styles["sidebar"]}>
                 <div className={styles["sidebar-content"]}>
-
+                    <div className={styles["content-group"]}>
+                        <span className={styles["content-micro-label"]}>General</span>
+                        <div className={styles["tab-list"]}>
+                            <Tab icon={<MagnifyingGlassIcon size={16} />} label="Search"/>
+                            <Tab icon={<HouseIcon size={16} />} label="Home"/>
+                        </div>
+                    </div>
+                    <div className={styles["content-group"]}>
+                        <span className={styles["content-micro-label"]}>Notes</span>
+                        {/* NOTES COMPONENT TO BE ADDED HERE */}
+                        {/* NOTES COMPONENT WILL LOAD NOTES */}
+                        <div className={styles["tab-list"]}>
+                            <Tab icon={<PlusIcon size={16}/>} label={"Add Note"}/>
+                        </div>
+                    </div>
+                    <div className={styles["content-group"]}>
+                        <div className={styles["tab-list"]}>
+                            <Tab icon={<GearIcon size={16} />} label="Settings"/>
+                            <Tab icon={<TrashIcon size={16} />} label="Trash"/>
+                        </div>
+                    </div>
                 </div>
             </aside>
             <div ref={resizerRef} className={styles["sidebar-resizer-wrapper"]}>
