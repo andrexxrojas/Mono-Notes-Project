@@ -6,11 +6,11 @@
 
 :root {
     /* FONT FAMILY */;
-    --font-light: 'Manrope Light', sans-serif;
-    --font-regular: 'Manrope Regular', sans-serif;
-    --font-medium: 'Manrope Medium', sans-serif;
-    --font-semibold: 'Manrope SemiBold', sans-serif;
-    --font-bold: 'Manrope Bold', sans-serif;
+    --font-light: 'InterTight Light', sans-serif;
+    --font-regular: 'InterTight Regular', sans-serif;
+    --font-medium: 'InterTight Medium', sans-serif;
+    --font-semibold: 'InterTight SemiBold', sans-serif;
+    --font-bold: 'InterTight Bold', sans-serif;
 
     /* FONT SIZE */
     --font-size-xxl: 45px;
