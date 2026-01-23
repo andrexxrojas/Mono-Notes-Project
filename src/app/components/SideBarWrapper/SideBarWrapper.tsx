@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import HeaderBar from "@/app/components/HeaderBar/HeaderBar";
 import SideBar from "@/app/components/SideBar/SideBar";
 import styles from "../../layout.module.css";
-import { setSidebarOpen as savedSidebarOpen, getSidebarOpen} from "@/utils/uiState";
+import { setSidebarOpen as savedSidebarOpen, getUIState } from "@/utils/uiState";
 
 export default function SideBarWrapper({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,7 +19,7 @@ export default function SideBarWrapper({ children }: { children: React.ReactNode
 
     useEffect(() => {
         async function loadSidebarState() {
-            const saved = await getSidebarOpen();
+            const saved = await getUIState().then(res => res.sidebar_open);
             if (typeof saved === "boolean") setSidebarOpen(saved);
         }
 

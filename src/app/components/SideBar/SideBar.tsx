@@ -4,7 +4,7 @@ import styles from "./SideBar.module.css";
 import { useRef, useEffect } from "react";
 import { MagnifyingGlassIcon, HouseIcon, GearIcon, TrashIcon, PlusIcon } from "@phosphor-icons/react";
 import Tab from "@/app/components/SideBarTab/SideBarTab";
-import { getSidebarWidth, setSidebarWidth } from "@/utils/uiState";
+import {getUIState, setSidebarWidth} from "@/utils/uiState";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -18,7 +18,7 @@ export default function SideBar({ isOpen }: SideBarProps) {
     useEffect(() => {
         const loadSidebarWidth = async () => {
             try {
-                const savedWidth = (await getSidebarWidth()) ?? 260;
+                const savedWidth = await getUIState().then(res => res.sidebar_width);
                 widthRef.current = savedWidth;
                 if (sidebarRef.current) sidebarRef.current.style.width = `${savedWidth}px`;
             } catch (err) {

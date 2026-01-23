@@ -1,30 +1,18 @@
-import { load as loadStore } from "@tauri-apps/plugin-store";
+import { invoke } from "@tauri-apps/api/core";
 
-const STORE_FILE = "ui_state.json";
+export type UiState = {
+    sidebar_open: boolean;
+    sidebar_width: number;
+};
 
-export async function loadUIStore() {
-    const store = await loadStore(STORE_FILE);
-    return store;
+export function getUIState(): Promise<UiState> {
+    return invoke("get_ui_state");
 }
 
-export async function getSidebarOpen(): Promise<boolean | undefined> {
-    const store = await loadUIStore();
-    return store.get<boolean>("sidebarOpen");
+export function setSidebarOpen(open: boolean) {
+    return invoke("set_sidebar_open", { open });
 }
 
-export async function setSidebarOpen(isOpen: boolean) {
-    const store = await loadUIStore();
-    await store.set("sidebarOpen", isOpen);
-    await store.save();
-}
-
-export async function getSidebarWidth(): Promise<number | undefined> {
-    const store = await loadUIStore();
-    return store.get<number>("sidebarWidth");
-}
-
-export async function setSidebarWidth(width: number) {
-    const store = await loadUIStore();
-    await store.set("sidebarWidth", width);
-    await store.save();
+export function setSidebarWidth(width: number) {
+    return invoke("set_sidebar_width", { width });
 }
