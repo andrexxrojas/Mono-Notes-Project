@@ -1,17 +1,22 @@
 mod settings;
+mod window_persistence;
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
+use window_persistence::{restore_window_size, track_window_events};
+use tauri::Manager;
+use tauri_plugin_store::StoreBuilder;
+
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .setup(|app| {
-            if cfg!(debug_assertions) {
-                app.handle().plugin(
-                    tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
-                        .build(),
-                )?;
-            }
+            let window = app.get_webview_window("main").unwrap();
+            let store = StoreBuilder::new(app.handle(), "ui_state.json").build()?;
+
+            window.show().unwrap();
+
+            restore_window_size(&window, &store);
+            track_window_events(&window, store.clone());
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

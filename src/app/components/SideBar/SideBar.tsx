@@ -83,8 +83,8 @@ export default function SideBar({ isOpen }: SideBarProps) {
                     <div className={styles["content-group"]}>
                         <span className={styles["content-micro-label"]}>General</span>
                         <div className={styles["tab-list"]}>
-                            <Tab icon={<MagnifyingGlassIcon size={16} />} label="Search"/>
-                            <Tab icon={<HouseIcon size={16} />} label="Home"/>
+                            <Tab icon={<MagnifyingGlassIcon size={19} />} label="Search"/>
+                            <Tab icon={<HouseIcon size={19} />} label="Home"/>
                         </div>
                     </div>
                     <div className={styles["content-group"]}>
@@ -92,13 +92,13 @@ export default function SideBar({ isOpen }: SideBarProps) {
                         {/* NOTES COMPONENT TO BE ADDED HERE */}
                         {/* NOTES COMPONENT WILL LOAD NOTES */}
                         <div className={styles["tab-list"]}>
-                            <Tab icon={<PlusIcon size={16}/>} label={"Add Note"}/>
+                            <Tab icon={<PlusIcon size={19}/>} label={"Add new"}/>
                         </div>
                     </div>
                     <div className={styles["content-group"]}>
                         <div className={styles["tab-list"]}>
-                            <Tab icon={<GearIcon size={16} />} label="Settings"/>
-                            <Tab icon={<TrashIcon size={16} />} label="Trash"/>
+                            <Tab icon={<GearIcon size={19} />} label="Settings"/>
+                            <Tab icon={<TrashIcon size={19} />} label="Trash"/>
                         </div>
                     </div>
                 </div>

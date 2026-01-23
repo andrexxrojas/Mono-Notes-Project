@@ -18,7 +18,7 @@ export default function SideBarWrapper({ children }: { children: React.ReactNode
     }
 
     useEffect(() => {
-        const loadSidebarState = async () => {
+        async function loadSidebarState() {
             const saved = await getSidebarOpen();
             if (typeof saved === "boolean") setSidebarOpen(saved);
         }
