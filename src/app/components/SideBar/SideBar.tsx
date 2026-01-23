@@ -2,9 +2,9 @@
 
 import styles from "./SideBar.module.css";
 import { useRef, useEffect } from "react";
-import { loadSettings, updateSettings } from "@/utils/settings";
 import { MagnifyingGlassIcon, HouseIcon, GearIcon, TrashIcon, PlusIcon } from "@phosphor-icons/react";
 import Tab from "@/app/components/SideBarTab/SideBarTab";
+import { getSidebarWidth, setSidebarWidth } from "@/utils/uiState";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -18,11 +18,9 @@ export default function SideBar({ isOpen }: SideBarProps) {
     useEffect(() => {
         const loadSidebarWidth = async () => {
             try {
-                const settings = await loadSettings();
-                widthRef.current = settings.sidebar_width;
-                if (sidebarRef.current) {
-                    sidebarRef.current.style.width = `${settings.sidebar_width}px`;
-                }
+                const savedWidth = (await getSidebarWidth()) ?? 260;
+                widthRef.current = savedWidth;
+                if (sidebarRef.current) sidebarRef.current.style.width = `${savedWidth}px`;
             } catch (err) {
                 console.error("Failed to load sidebar width:", err);
             }
@@ -58,8 +56,7 @@ export default function SideBar({ isOpen }: SideBarProps) {
             document.removeEventListener("mouseup", onMouseUp);
 
             try {
-                await updateSettings({ sidebar_width: widthRef.current });
-                console.log("Settings saved successfully");
+                await setSidebarWidth(widthRef.current);
             } catch (err) {
                 console.error("Failed to save sidebar width:", err);
             }

@@ -1,11 +1,10 @@
+use dirs::config_dir;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
-use dirs::config_dir;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Settings {
-    pub sidebar_width: u32,
     pub interface_font: String,
     pub content_font: String,
     pub theme: String,
@@ -14,13 +13,12 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-       Self {
-          sidebar_width: 260,
-          interface_font: "Manrope".into(),
-          content_font: "Manrope".into(),
-          theme: "light".into(),
-          background: "#FFFFFF".into(),
-      }
+        Self {
+            interface_font: "Manrope".into(),
+            content_font: "Manrope".into(),
+            theme: "light".into(),
+            background: "#FFFFFF".into(),
+        }
     }
 }
 
@@ -48,7 +46,6 @@ pub fn save_settings(settings: Settings) -> Result<(), String> {
     let path = get_settings_path();
     let data = serde_json::to_string_pretty(&settings)
         .map_err(|e| format!("Failed to serialize: {}", e))?;
-    fs::write(&path, data)
-        .map_err(|e| format!("Failed to write file: {}", e))?;
+    fs::write(&path, data).map_err(|e| format!("Failed to write file: {}", e))?;
     Ok(())
 }
