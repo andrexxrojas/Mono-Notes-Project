@@ -10,7 +10,7 @@ impl Default for UiState {
     fn default() -> Self {
         Self {
             sidebar_open: true,
-            sidebar_width: 240.0,
+            sidebar_width: 260.0,
         }
     }
 }
