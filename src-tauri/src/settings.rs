@@ -1,4 +1,4 @@
-use dirs::config_dir;
+use dirs::data_dir;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -23,9 +23,9 @@ impl Default for Settings {
 }
 
 pub fn get_settings_path() -> PathBuf {
-    let mut path = config_dir().expect("failed to get config dir");
-    path.push("mono");
-    fs::create_dir_all(&path).unwrap();
+    let mut path = data_dir().expect("failed to get config dir");
+    path.push("com.tauri.dev");
+    fs::create_dir_all(&path).expect("failed to create app folder");
     path.push("settings.json");
     path
 }
@@ -33,12 +33,8 @@ pub fn get_settings_path() -> PathBuf {
 #[tauri::command]
 pub fn load_settings() -> Settings {
     let path = get_settings_path();
-    if path.exists() {
-        let data = fs::read_to_string(&path).unwrap_or_default();
-        serde_json::from_str(&data).unwrap_or_default()
-    } else {
-        Settings::default()
-    }
+    let data = fs::read_to_string(&path).unwrap_or_default();
+    serde_json::from_str(&data).unwrap_or_default()
 }
 
 #[tauri::command]

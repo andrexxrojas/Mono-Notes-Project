@@ -22,6 +22,9 @@ use commands::notes_commands::{
     get_blocks_cmd
 };
 
+use dirs::data_dir;
+use std::fs;
+use std::sync::Arc;
 use db::notes_db::NotesDb;
 use ui_state::UiState;
 
@@ -30,8 +33,20 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
-            let store = StoreBuilder::new(app.handle(), "ui_state.json").build()?;
 
+            // --- SETTINGS ---
+            let settings_path = crate::settings::get_settings_path();
+            if !settings_path.exists() {
+                let default_settings = crate::settings::Settings::default();
+                std::fs::write(
+                    &settings_path,
+                    serde_json::to_string_pretty(&default_settings).unwrap()
+                ).expect("Failed to create default settings.json");
+                println!("Created default settings at: {:?}", settings_path);
+            }
+
+            // --- UI STATE ---
+            let store = StoreBuilder::new(app.handle(), "ui_state.json").build()?;
             let ui_state: UiState = store
                 .get("uiState")
                 .and_then(|v| serde_json::from_value(v).ok())
@@ -42,9 +57,15 @@ pub fn run() {
                 state: std::sync::Mutex::new(ui_state),
             });
 
-            let notes_db = NotesDb::new("notes.db");
-            app.manage(notes_db);
+            // --- NOTES DB ---
+            let mut db_path = data_dir().expect("failed to get data dir");
+            db_path.push("com.tauri.dev");
+            fs::create_dir_all(&db_path).expect("failed to create app folder");
+            db_path.push("notes.db");
+            let notes_db = NotesDb::new(db_path.to_str().unwrap())?;
+            app.manage(Arc::new(notes_db));
 
+            // --- WINDOWS PERSISTENCE ---
             restore_window_size(&window, &store);
             track_window_events(&window, store.clone());
 

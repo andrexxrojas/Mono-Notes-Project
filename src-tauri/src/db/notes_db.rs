@@ -8,7 +8,8 @@ use chrono::Utc;
 pub struct Note {
     pub id: String,
     pub title: String,
-    pub created_at: i64
+    pub created_at: i64,
+    pub icon: Option<String>
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -42,7 +43,8 @@ impl NotesDb {
             CREATE TABLE IF NOT EXISTS notes (
                 id TEXT PRIMARY KEY,
                 title TEXT NOT NULL,
-                created_at INTEGER NOT NULL
+                created_at INTEGER NOT NULL,
+                icon TEXT
             );
 
             CREATE TABLE IF NOT EXISTS blocks (
@@ -59,15 +61,16 @@ impl NotesDb {
         Ok(Self { conn: Mutex::new(conn)})
     }
 
-    pub fn add_note(&self, title: &str) -> Result<String> {
+    pub fn add_note(&self, title: &str, icon: Option<&str>) -> Result<String> {
         let note = Note {
             id: Uuid::new_v4().to_string(),
             title: title.to_string(),
             created_at: Utc::now().timestamp(),
+            icon: icon.map(|s| s.to_string()),
         };
         self.conn.lock().unwrap().execute(
-            "INSERT INTO notes (id, title, created_at) VALUES (?1, ?2, ?3)",
-            params![note.id, note.title, note.created_at],
+            "INSERT INTO notes (id, title, created_at, icon) VALUES (?1, ?2, ?3, ?4)",
+            params![note.id, note.title, note.created_at, note.icon],
         )?;
         Ok(note.id)
     }
@@ -75,13 +78,14 @@ impl NotesDb {
     pub fn get_notes(&self) -> Result<Vec<Note>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT id, title, created_at FROM notes ORDER BY created_at DESC"
+            "SELECT id, title, created_at, icon FROM notes ORDER BY created_at DESC"
         )?;
         let notes_iter = stmt.query_map([], |row| {
             Ok(Note {
                 id: row.get(0)?,
                 title: row.get(1)?,
                 created_at: row.get(2)?,
+                icon: row.get(3)?,
             })
         })?;
         notes_iter.collect()

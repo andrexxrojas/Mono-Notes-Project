@@ -1,19 +1,20 @@
 use tauri::State;
 use crate::db::notes_db::{NotesDb, BlockType, Note, Block};
+use std::sync::Arc;
 
 #[tauri::command]
-pub fn add_note_cmd(db: State<NotesDb>, title: String) -> Result<String, String> {
-    db.add_note(&title).map_err(|e| e.to_string())
+pub fn add_note_cmd(db: State<Arc<NotesDb>>, title: String) -> Result<String, String> {
+    db.add_note(&title, None).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn get_notes_cmd(db: State<NotesDb>) -> Result<Vec<Note>, String> {
+pub fn get_notes_cmd(db: State<Arc<NotesDb>>) -> Result<Vec<Note>, String> {
     db.get_notes().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 pub fn add_block_cmd(
-    db: State<NotesDb>,
+    db: State<Arc<NotesDb>>,
     note_id: String,
     block_type: String,
     content: String,
@@ -29,6 +30,6 @@ pub fn add_block_cmd(
 }
 
 #[tauri::command]
-pub fn get_blocks_cmd(db: State<NotesDb>, note_id: String) -> Result<Vec<Block>, String> {
+pub fn get_blocks_cmd(db: State<Arc<NotesDb>>, note_id: String) -> Result<Vec<Block>, String> {
     db.get_blocks(&note_id).map_err(|e| e.to_string())
 }
