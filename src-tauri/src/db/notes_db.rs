@@ -91,7 +91,22 @@ impl NotesDb {
         notes_iter.collect()
     }
 
-    // --- Blocks ---
+    pub fn get_note(&self, id: &str) -> Result<Note> {
+        let conn = self.conn.lock().unwrap();
+        conn.query_row(
+            "SELECT id, title, created_at, icon FROM notes WHERE id = ?1",
+            params![id],
+            |row| {
+                Ok(Note {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    created_at: row.get(2)?,
+                    icon: row.get(3)?
+                })
+            }
+        )
+    }
+
     pub fn add_block(&self, note_id: &str, block_type: BlockType, content: &str) -> Result<String> {
         let conn = self.conn.lock().unwrap();
 

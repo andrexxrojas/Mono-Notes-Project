@@ -6,10 +6,12 @@ import NoteTab from "@/app/components/NotesListTab/NotesListTab";
 import { PlusIcon } from "@phosphor-icons/react";
 import { getNotes, addNote, Note } from "@/utils/notes";
 import styles from "./NotesList.module.css";
+import { useRouter } from "next/navigation";
 
 export default function NotesList() {
     const [notes, setNotes] = useState<Note[]>([]);
     const isMounted = useRef(true);
+    const router = useRouter();
 
     const fetchNotes = useCallback(async () => {
         try {
@@ -32,9 +34,10 @@ export default function NotesList() {
     const handleAddNote = async () => {
         try {
             const title = "New note";
-            await addNote(title);
-
+            const note = await addNote(title);
             void fetchNotes();
+
+            router.push(`/note/${note.id}`);
         } catch (err) {
             console.error("Failed to add note:", err);
         }
@@ -47,7 +50,7 @@ export default function NotesList() {
                     key={note.id}
                     icon={note.icon ? <span>{note.icon}</span>: undefined}
                     label={note.title}
-                    onClick={() => console.log("Clicked note:", note.id)}
+                    onClick={() => router.push(`/note/${note.id}`)}
                 />
             ))}
 

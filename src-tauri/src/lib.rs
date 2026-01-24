@@ -18,6 +18,7 @@ use commands::ui_commands::{
 use commands::notes_commands::{
     add_note_cmd,
     get_notes_cmd,
+    get_note_cmd,
     add_block_cmd,
     get_blocks_cmd
 };
@@ -80,6 +81,7 @@ pub fn run() {
             set_sidebar_width,
             add_note_cmd,
             get_notes_cmd,
+            get_note_cmd,
             add_block_cmd,
             get_blocks_cmd
         ])

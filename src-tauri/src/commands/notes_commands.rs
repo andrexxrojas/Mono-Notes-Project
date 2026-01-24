@@ -13,6 +13,11 @@ pub fn get_notes_cmd(db: State<Arc<NotesDb>>) -> Result<Vec<Note>, String> {
 }
 
 #[tauri::command]
+pub fn get_note_cmd(db: State<Arc<NotesDb>>, id: String) -> Result<Note, String> {
+    db.get_note(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn add_block_cmd(
     db: State<Arc<NotesDb>>,
     note_id: String,

@@ -21,6 +21,10 @@ export const getNotes = async (): Promise<Note[]> => {
     return invoke<Note[]>("get_notes_cmd");
 };
 
+export const getNote = async (id: string): Promise<Note> => {
+    return invoke<Note>("get_note_cmd", { id });
+}
+
 export const addNote = async (title: string): Promise<Note> => {
     const id = await invoke<string>("add_note_cmd", { title });
     return {
