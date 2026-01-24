@@ -42,7 +42,6 @@ pub fn run() {
                     &settings_path,
                     serde_json::to_string_pretty(&default_settings).unwrap()
                 ).expect("Failed to create default settings.json");
-                println!("Created default settings at: {:?}", settings_path);
             }
 
             // --- UI STATE ---
