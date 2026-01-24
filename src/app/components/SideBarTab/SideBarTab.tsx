@@ -4,12 +4,12 @@ import {MouseEventHandler, ReactNode} from "react";
 type SideBarTabProps = {
     icon: ReactNode;
     label: string;
-    onClick?: MouseEventHandler<HTMLButtonElement>
+    onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function SideBarTab({ icon, label, onClick }: SideBarTabProps) {
     return (
-        <button className={styles["content-tab"]}>
+        <button className={styles["content-tab"]} onClick={onClick}>
             {icon}
             <span className={styles["content-tab-txt"]}>{label}</span>
         </button>

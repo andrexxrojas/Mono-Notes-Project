@@ -1,0 +1,21 @@
+.note-tab {
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    align-items: center;
+    padding: 8px;
+    gap: 10px;
+    background-color: transparent;
+    border-radius: var(--sidebar-tab-border-radius);
+    transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-semibold);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    color: #5F5E5B;
+}
+
+.note-tab:hover {
+    background-color: var(--sidebar-tab-hover-bg);
+}

@@ -2,8 +2,9 @@
 
 import styles from "./SideBar.module.css";
 import { useRef, useEffect } from "react";
-import { MagnifyingGlassIcon, HouseIcon, GearIcon, TrashIcon, PlusIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, HouseIcon, GearIcon, TrashIcon } from "@phosphor-icons/react";
 import Tab from "@/app/components/SideBarTab/SideBarTab";
+import NotesList from "@/app/components/NotesList/NotesList";
 import {getUIState, setSidebarWidth} from "@/utils/uiState";
 
 interface SideBarProps {
@@ -92,7 +93,7 @@ export default function SideBar({ isOpen }: SideBarProps) {
                         {/* NOTES COMPONENT TO BE ADDED HERE */}
                         {/* NOTES COMPONENT WILL LOAD NOTES */}
                         <div className={styles["tab-list"]}>
-                            <Tab icon={<PlusIcon size={19}/>} label={"Add new"}/>
+                            <NotesList />
                         </div>
                     </div>
                     <div className={styles["content-group"]}>
