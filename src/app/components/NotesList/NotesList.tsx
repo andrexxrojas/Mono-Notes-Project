@@ -10,32 +10,28 @@ import { useRouter } from "next/navigation";
 
 export default function NotesList() {
     const [notes, setNotes] = useState<Note[]>([]);
-    const isMounted = useRef(true);
     const router = useRouter();
 
-    const fetchNotes = useCallback(async () => {
-        try {
-            const notesData = await getNotes();
-            if (isMounted.current) setNotes(notesData);
-        } catch (err) {
-            console.error("Failed to fetch notes:", err);
-        }
-    }, []);
-
     useEffect(() => {
-        isMounted.current = true;
-        void fetchNotes();
-
-        return () => {
-            isMounted.current = false;
+        const fetchNotes = async () => {
+            try {
+                const notesData = await getNotes();
+                setNotes(notesData);
+            } catch (err) {
+                console.error("Failed to fetch notes:", err);
+            }
         };
-    }, [fetchNotes]);
+
+        void fetchNotes();
+    }, []);
 
     const handleAddNote = async () => {
         try {
             const title = "New note";
             const note = await addNote(title);
-            void fetchNotes();
+
+            const notesData = await getNotes();
+            setNotes(notesData);
 
             router.push(`/note/${note.id}`);
         } catch (err) {

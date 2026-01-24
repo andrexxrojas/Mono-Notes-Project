@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { getNote, Note } from "@/utils/notes";
+import NoteEditor from "@/app/components/NoteEditor/NoteEditor";
 import styles from "./page.module.css";
 
 export default function NotePage() {
@@ -14,7 +15,6 @@ export default function NotePage() {
         const fetchNote = async () => {
             try {
                 const id = params.id as string;
-                console.log("ID:", id);
                 const noteData = await getNote(id);
                 setNote(noteData);
             } catch (err) {
@@ -27,12 +27,12 @@ export default function NotePage() {
         void fetchNote();
     }, [params.id]);
 
-    if(!note) return <h1>Note not found.</h1>
-
     return (
         <div className={styles["note-page-wrapper"]}>
             <div className={styles["note-page-container"]}>
-                <h1>{note?.id}</h1>
+                {note && (
+                    <NoteEditor note={note}/>
+                )}
             </div>
         </div>
     );
