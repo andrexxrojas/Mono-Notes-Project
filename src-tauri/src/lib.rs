@@ -1,19 +1,28 @@
 mod settings;
 mod window_persistence;
 mod ui_state;
-mod ui_commands;
+mod db;
+mod commands;
 
 use window_persistence::{restore_window_size, track_window_events};
 use tauri::Manager;
 use tauri_plugin_store::StoreBuilder;
 
-use ui_commands::{
+use commands::ui_commands::{
     UiStateManager,
     get_ui_state,
     set_sidebar_open,
     set_sidebar_width,
 };
 
+use commands::notes_commands::{
+    add_note_cmd,
+    get_notes_cmd,
+    add_block_cmd,
+    get_blocks_cmd
+};
+
+use db::notes_db::NotesDb;
 use ui_state::UiState;
 
 pub fn run() {
@@ -33,10 +42,14 @@ pub fn run() {
                 state: std::sync::Mutex::new(ui_state),
             });
 
+            let notes_db = NotesDb::new("notes.db");
+            app.manage(notes_db);
+
             restore_window_size(&window, &store);
             track_window_events(&window, store.clone());
 
             window.show().unwrap();
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -45,6 +58,10 @@ pub fn run() {
             get_ui_state,
             set_sidebar_open,
             set_sidebar_width,
+            add_note_cmd,
+            get_notes_cmd,
+            add_block_cmd,
+            get_blocks_cmd
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -19,7 +19,6 @@ pub fn restore_window_size<R: Runtime>(window: &WebviewWindow<R>, store: &Arc<St
             if state.maximized {
                 let _ = window.maximize();
             } else {
-                let _ = window.unmaximize();
                 let _ = window.set_size(LogicalSize { width: state.width, height: state.height });
                 let _ = window.set_position(LogicalPosition { x: state.x, y: state.y });
             }
@@ -55,26 +54,38 @@ pub fn track_window_events<R: Runtime>(window: &WebviewWindow<R>, store: Arc<Sto
     window.on_window_event(move |event| {
         if let WindowEvent::Resized(physical_size) = event {
             let maximized = window_clone.is_maximized().unwrap_or(false);
-            let scale_factor = window_clone.scale_factor().unwrap_or(1.0);
-            let logical_size = physical_size.to_logical::<f64>(scale_factor);
 
-            let pos = if maximized {
-                LogicalPosition { x: 0.0, y: 0.0 }
+            // Don't save position/size when maximized - it gives invalid values
+            if !maximized {
+                let scale_factor = window_clone.scale_factor().unwrap_or(1.0);
+                let logical_size = physical_size.to_logical::<f64>(scale_factor);
+                let pos = window_clone.outer_position()
+                    .unwrap_or(tauri::PhysicalPosition { x: 0, y: 0 })
+                    .to_logical::<f64>(scale_factor);
+
+                let state = WindowState {
+                    width: logical_size.width,
+                    height: logical_size.height,
+                    x: pos.x,
+                    y: pos.y,
+                    maximized: false,
+                };
+
+                let mut pending = pending_state.lock().unwrap();
+                *pending = Some(state);
             } else {
-                let p = window_clone.outer_position().unwrap_or(tauri::PhysicalPosition { x: 0, y: 0 });
-                p.to_logical::<f64>(scale_factor)
-            };
+                // Just save the maximized state
+                let state = WindowState {
+                    width: 800.0,  // Default values (won't be used)
+                    height: 600.0,
+                    x: 0.0,
+                    y: 0.0,
+                    maximized: true,
+                };
 
-            let state = WindowState {
-                width: logical_size.width,
-                height: logical_size.height,
-                x: pos.x,
-                y: pos.y,
-                maximized,
-            };
-
-            let mut pending = pending_state.lock().unwrap();
-            *pending = Some(state);
+                let mut pending = pending_state.lock().unwrap();
+                *pending = Some(state);
+            }
         }
     });
 }
