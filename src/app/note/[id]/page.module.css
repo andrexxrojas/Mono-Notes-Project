@@ -1,0 +1,11 @@
+.note-page-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.note-page-container {
+    width: 100%;
+    max-width: var(--note-editor-max-width);
+    margin-top: var(--note-editor-margin-top);
+}

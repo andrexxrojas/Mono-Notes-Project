@@ -30,7 +30,7 @@
     --editor-bg: #FFFFFF;
     --border: #D0D0D0;
     --icon-primary: #AAAAAA;
-    --text-secondary: #91918E;
+    --text-secondary: #E1E1E0;
     --text-foreground: #3D3D3D;
     --accent: #39DD50;
 
@@ -64,6 +64,11 @@
     /* SIDEBAR TAB */
     --sidebar-tab-border-radius: 6px;
     --sidebar-tab-hover-bg: #F1F0EF;
+
+    /* NOTE EDITOR */
+    --note-editor-max-width: 760px;
+    --note-editor-bg: #FFFFFF;
+    --note-editor-margin-top: 138px;
 
 }
 

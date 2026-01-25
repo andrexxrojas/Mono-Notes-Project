@@ -3,3 +3,8 @@
     height: calc(100vh - var(--titlebar-height));
     display: flex;
 }
+
+.main-container {
+    width: 100%;
+    height: 100%;
+}

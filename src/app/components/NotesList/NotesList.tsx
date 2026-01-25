@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { PlusIcon } from "@phosphor-icons/react";
+import { useNotes } from "@/app/context/NotesContext";
+import { getNotes, addNote } from "@/utils/notes";
 import Tab from "@/app/components/SideBarTab/SideBarTab";
 import NoteTab from "@/app/components/NotesListTab/NotesListTab";
-import { PlusIcon } from "@phosphor-icons/react";
-import { getNotes, addNote, Note } from "@/utils/notes";
-import styles from "./NotesList.module.css";
-import { useRouter } from "next/navigation";
 
 export default function NotesList() {
-    const [notes, setNotes] = useState<Note[]>([]);
+    const { notes, setNotes } = useNotes();
     const router = useRouter();
 
     useEffect(() => {
@@ -23,13 +23,13 @@ export default function NotesList() {
         };
 
         void fetchNotes();
-    }, []);
+    }, [setNotes]);
 
     const handleAddNote = async () => {
         try {
             const title = "New note";
             const note = await addNote(title);
-
+            setNotes((prev) => [...prev, note]);
             const notesData = await getNotes();
             setNotes(notesData);
 

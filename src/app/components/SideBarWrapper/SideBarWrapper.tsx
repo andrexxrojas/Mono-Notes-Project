@@ -5,6 +5,7 @@ import HeaderBar from "@/app/components/HeaderBar/HeaderBar";
 import SideBar from "@/app/components/SideBar/SideBar";
 import styles from "../../layout.module.css";
 import { setSidebarOpen as savedSidebarOpen, getUIState } from "@/utils/uiState";
+import { NotesProvider } from "@/app/context/NotesContext";
 
 export default function SideBarWrapper({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -30,8 +31,10 @@ export default function SideBarWrapper({ children }: { children: React.ReactNode
         <>
             <HeaderBar onToggleSidebarAction={toggleSidebar} />
             <div className={styles["app-shell"]}>
-                <SideBar isOpen={sidebarOpen} />
-                <main className={styles["main-container"]}>{children}</main>
+                <NotesProvider>
+                    <SideBar isOpen={sidebarOpen} />
+                    <main className={styles["main-container"]}>{children}</main>
+                </NotesProvider>
             </div>
         </>
     )

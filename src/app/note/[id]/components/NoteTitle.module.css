@@ -1,0 +1,13 @@
+.note-title {
+    font-family: var(--font-bold);
+    font-size: var(--font-size-xl);
+    color: var(--text-foreground);
+    outline: none;
+    flex: 1;
+}
+
+.note-title:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
