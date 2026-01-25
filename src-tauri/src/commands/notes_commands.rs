@@ -18,6 +18,11 @@ pub fn get_note_cmd(db: State<Arc<NotesDb>>, id: String) -> Result<Note, String>
 }
 
 #[tauri::command]
+pub fn update_note_title(db: State<Arc<NotesDb>>, note_id: String, title: String) -> Result<(), String> {
+    db.update_note_title(&note_id, &title).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn add_block_cmd(
     db: State<Arc<NotesDb>>,
     note_id: String,

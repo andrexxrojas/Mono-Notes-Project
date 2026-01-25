@@ -62,16 +62,30 @@ impl NotesDb {
     }
 
     pub fn add_note(&self, title: &str, icon: Option<&str>) -> Result<String> {
+        let note_id = Uuid::new_v4().to_string();
+
         let note = Note {
-            id: Uuid::new_v4().to_string(),
+            id: note_id.clone(),
             title: title.to_string(),
             created_at: Utc::now().timestamp(),
             icon: icon.map(|s| s.to_string()),
         };
-        self.conn.lock().unwrap().execute(
+
+        let conn = self.conn.lock().unwrap();
+
+        conn.execute(
             "INSERT INTO notes (id, title, created_at, icon) VALUES (?1, ?2, ?3, ?4)",
             params![note.id, note.title, note.created_at, note.icon],
         )?;
+
+        let block_id = Uuid::new_v4().to_string();
+
+        conn.execute(
+            "INSERT INTO blocks (id, note_id, type, content, position)
+             VALUES (?1, ?2, 'Paragraph', '', 0)",
+             params![block_id, note_id]
+        )?;
+
         Ok(note.id)
     }
 
@@ -105,6 +119,17 @@ impl NotesDb {
                 })
             }
         )
+    }
+
+    pub fn update_note_title(&self, note_id: &str, title: &str) -> Result<()> {
+        let conn = self.conn.lock().unwrap();
+
+        conn.execute(
+            "UPDATE notes SET title = ?1 WHERE id = ?2",
+            params![title, note_id]
+        )?;
+
+        Ok(())
     }
 
     pub fn add_block(&self, note_id: &str, block_type: BlockType, content: &str) -> Result<String> {

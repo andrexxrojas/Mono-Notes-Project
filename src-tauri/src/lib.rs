@@ -19,6 +19,7 @@ use commands::notes_commands::{
     add_note_cmd,
     get_notes_cmd,
     get_note_cmd,
+    update_note_title,
     add_block_cmd,
     get_blocks_cmd
 };
@@ -82,6 +83,7 @@ pub fn run() {
             add_note_cmd,
             get_notes_cmd,
             get_note_cmd,
+            update_note_title,
             add_block_cmd,
             get_blocks_cmd
         ])
