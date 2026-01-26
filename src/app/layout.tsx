@@ -9,20 +9,20 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
+ children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-        lang="en"
-        className={`${light.variable} ${regular.variable} ${medium.variable} ${semibold.variable} ${bold.variable}`}
-    >
+      <html
+          lang="en"
+          className={`${light.variable} ${regular.variable} ${medium.variable} ${semibold.variable} ${bold.variable}`}
+      >
       <body>
-        <SideBarWrapper>
-          {children}
-        </SideBarWrapper>
+      <SideBarWrapper>
+        {children}
+      </SideBarWrapper>
       </body>
-    </html>
+      </html>
   );
 }

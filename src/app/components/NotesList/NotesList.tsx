@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PlusIcon } from "@phosphor-icons/react";
 import { useNotes } from "@/app/context/NotesContext";
-import { getNotes, addNote } from "@/utils/notes";
 import Tab from "@/app/components/SideBarTab/SideBarTab";
 import NoteTab from "@/app/components/NotesListTab/NotesListTab";
+import {Note} from "@/app/type/electron";
 
 export default function NotesList() {
     const { notes, setNotes } = useNotes();
@@ -15,7 +15,7 @@ export default function NotesList() {
     useEffect(() => {
         const fetchNotes = async () => {
             try {
-                const notesData = await getNotes();
+                const notesData = window.electron.notes.getNotes();
                 setNotes(notesData);
             } catch (err) {
                 console.error("Failed to fetch notes:", err);
@@ -28,12 +28,12 @@ export default function NotesList() {
     const handleAddNote = async () => {
         try {
             const title = "New note";
-            const note = await addNote(title);
-            setNotes((prev) => [...prev, note]);
-            const notesData = await getNotes();
+            const noteId: string = window.electron.notes.addNote(title);
+            const notesData: Note[] = window.electron.notes.getNotes();
+
             setNotes(notesData);
 
-            router.push(`/note/${note.id}`);
+            router.push(`/note/${noteId}`);
         } catch (err) {
             console.error("Failed to add note:", err);
         }

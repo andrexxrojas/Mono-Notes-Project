@@ -14,9 +14,7 @@
     z-index: 999;
 }
 
-.title-bar [data-tauri-drag-region] {
-    flex: 1;
-    height: 100%;
+.title-bar[data-custom-drag-region] {
     -webkit-app-region: drag;
 }
 
@@ -37,6 +35,7 @@
     border: none;
     background-color: transparent;
     transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-app-region: no-drag;
 }
 
 .window-btn:hover {
@@ -77,6 +76,7 @@
     cursor: pointer;
     color: var(--icon-primary);
     transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-app-region: no-drag;
 }
 
 .btn:hover {

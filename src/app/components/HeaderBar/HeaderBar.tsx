@@ -1,27 +1,23 @@
 "use client";
 
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { XIcon, MinusIcon, SquareIcon, SidebarSimpleIcon } from "@phosphor-icons/react";
 import styles from "./HeaderBar.module.css";
 
 export default function HeaderBar({ onToggleSidebarAction }: { onToggleSidebarAction: () => void }) {
-    const minimize = async () => {
-        const win = getCurrentWindow();
-        await win.minimize();
+    const minimize = () => {
+        window.electron.window.maximize();
     };
 
-    const maximize = async () => {
-        const win = getCurrentWindow();
-        await win.toggleMaximize();
+    const maximize = () => {
+        window.electron.window.maximize();
     };
 
-    const close = async () => {
-        const win = getCurrentWindow();
-        await win.close();
+    const close = () => {
+        window.electron.window.close();
     };
 
     return (
-        <div className={styles["title-bar"]} data-tauri-drag-region>
+        <div className={styles["title-bar"]} data-custom-drag-region>
 
             <div className={styles["branding"]}>
                 {/* APPLICATION NAME OR ICON TO BE ADDED */}

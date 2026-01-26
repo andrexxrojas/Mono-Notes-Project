@@ -2,30 +2,37 @@
 
 import React, { useState, useEffect } from "react";
 import HeaderBar from "@/app/components/HeaderBar/HeaderBar";
-import SideBar from "@/app/components/SideBar/SideBar";
 import styles from "../../layout.module.css";
-import { setSidebarOpen as savedSidebarOpen, getUIState } from "@/utils/uiState";
 import { NotesProvider } from "@/app/context/NotesContext";
+import SideBar from "@/app/components/SideBar/SideBar";
 
 export default function SideBarWrapper({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [loaded, setLoaded] = useState(false);
 
     const toggleSidebar = async () => {
         setSidebarOpen((prev) => {
             const newState = !prev;
-            void savedSidebarOpen(newState);
+            window.electron.ui.patch({ sidebarOpen: newState });
             return newState;
         });
     }
 
     useEffect(() => {
-        async function loadSidebarState() {
-            const saved = await getUIState().then(res => res.sidebar_open);
-            if (typeof saved === "boolean") setSidebarOpen(saved);
+        const loadSidebarState = async () => {
+            const state = await window.electron.ui.get();
+            if (typeof state.sidebarOpen === "boolean") {
+                setSidebarOpen(state.sidebarOpen);
+            }
+            setLoaded(true);
         }
 
         void loadSidebarState();
     }, []);
+
+    if (!loaded) {
+        return null;
+    }
 
     return (
         <>

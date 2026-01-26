@@ -5,7 +5,6 @@ import { useRef, useEffect } from "react";
 import { MagnifyingGlassIcon, HouseIcon, GearIcon, TrashIcon } from "@phosphor-icons/react";
 import Tab from "@/app/components/SideBarTab/SideBarTab";
 import NotesList from "@/app/components/NotesList/NotesList";
-import {getUIState, setSidebarWidth} from "@/utils/uiState";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -19,9 +18,8 @@ export default function SideBar({ isOpen }: SideBarProps) {
     useEffect(() => {
         const loadSidebarWidth = async () => {
             try {
-                const savedWidth = await getUIState().then(res => res.sidebar_width);
-                widthRef.current = savedWidth;
-                if (sidebarRef.current) sidebarRef.current.style.width = `${savedWidth}px`;
+                const state = await window.electron.ui.get();
+                if (sidebarRef.current) sidebarRef.current.style.width = `${state.sidebarWidth}px`;
             } catch (err) {
                 console.error("Failed to load sidebar width:", err);
             }
@@ -56,11 +54,7 @@ export default function SideBar({ isOpen }: SideBarProps) {
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
 
-            try {
-                await setSidebarWidth(widthRef.current);
-            } catch (err) {
-                console.error("Failed to save sidebar width:", err);
-            }
+            await window.electron.ui.patch({ sidebarWidth: widthRef.current });
         };
 
         const onMouseDown = (e: MouseEvent) => {

@@ -1,5 +1,5 @@
 import styles from "./NoteEditor.module.css";
-import {Note} from "@/utils/notes";
+import { Note } from "@/app/type/electron";
 
 export default function NoteEditor({ note }: { note: Note }) {
     return (

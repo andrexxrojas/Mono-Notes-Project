@@ -1,7 +1,6 @@
 "use client";
 
 import { useNotes, Note } from "@/app/context/NotesContext";
-import { updateNoteTitle as updateTitle } from "@/utils/notes";
 import React, { useRef } from "react";
 import styles from "./NoteTitle.module.css";
 
@@ -13,12 +12,11 @@ export default function NoteTitle({ note }: NoteTitleProps) {
     const { updateNoteTitle } = useNotes();
     const divRef = useRef<HTMLDivElement>(null);
 
-    const handleUpdate = async () => {
+    const handleUpdate = () => {
         let text = divRef.current?.textContent?.trim() || "";
         if (!text) text = "New note";
-        if (note.title !== text) {
-            console.log(`NOTE ID: ${note.id}\n NOTE TEXT: ${text}`)
-            await updateTitle(note.id, text);
+        if (text !== note.title) {
+            window.electron.notes.updateNoteTitle(note.id, text);
         }
     };
 
