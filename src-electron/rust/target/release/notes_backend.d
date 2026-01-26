@@ -1,0 +1,1 @@
+D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\notes_backend.dll: D:\code\projects\electron-nextjs-project\src-electron\rust\build.rs D:\code\projects\electron-nextjs-project\src-electron\rust\src\lib.rs

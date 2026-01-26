@@ -1,0 +1,14 @@
+D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\deps\serde-c07f5f9d0119dc4f.d: C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\build\serde-0904142beeccba7d\out/private.rs
+
+D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\deps\libserde-c07f5f9d0119dc4f.rlib: C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\build\serde-0904142beeccba7d\out/private.rs
+
+D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\deps\libserde-c07f5f9d0119dc4f.rmeta: C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\build\serde-0904142beeccba7d\out/private.rs
+
+C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs:
+C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs:
+C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs:
+C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs:
+C:\Users\Andre\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs:
+D:\code\projects\electron-nextjs-project\src-electron\rust\target\release\build\serde-0904142beeccba7d\out/private.rs:
+
+# env-dep:OUT_DIR=D:\\code\\projects\\electron-nextjs-project\\src-electron\\rust\\target\\release\\build\\serde-0904142beeccba7d\\out
