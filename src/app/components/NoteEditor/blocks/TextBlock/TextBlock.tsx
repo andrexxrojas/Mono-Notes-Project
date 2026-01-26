@@ -86,13 +86,11 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
         if (e.key === "Enter") {
             e.preventDefault();
 
-            // Clear any pending updates
             if (updateTimeoutRef.current) {
                 clearTimeout(updateTimeoutRef.current);
                 updateTimeoutRef.current = null;
             }
 
-            // Immediate update
             const text = divRef.current?.textContent?.trim() || "";
             if (text !== block.content) {
                 window.electron.notes.updateBlock(block.id, text);
@@ -112,11 +110,9 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
             div.textContent = "";
         }
 
-        // Trigger debounced update
         handleUpdate();
     }, [handleUpdate]);
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
             if (updateTimeoutRef.current) {
@@ -136,7 +132,6 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
             onBlur={handleBlur}
             onFocus={handleFocus}
             onKeyDown={handleKeyDown}
-            // CRITICAL: Disable spellcheck and autocorrect for performance
             spellCheck={false}
             autoCorrect="off"
             autoCapitalize="off"

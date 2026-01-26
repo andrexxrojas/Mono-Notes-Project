@@ -71,7 +71,6 @@ export default function VirtualizedBlocks({
         [blocks, scrollContainerRef, visibleRange.start]
     );
 
-    // 3️⃣ ResizeObserver for viewport height
     useLayoutEffect(() => {
         const el = scrollContainerRef.current;
         if (!el) return;

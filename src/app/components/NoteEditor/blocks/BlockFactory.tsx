@@ -22,12 +22,10 @@ const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured }: Bloc
             );
     }
 }, (prevProps, nextProps) => {
-    // Custom comparison logic
     return (
         prevProps.block.id === nextProps.block.id &&
         prevProps.block.content === nextProps.block.content &&
         prevProps.autoFocus === nextProps.autoFocus
-        // If your Block type has a 'type' or 'data' field, add those here too
     );
 });
 
