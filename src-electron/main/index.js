@@ -6,6 +6,7 @@ import "./app-events.js";
 let mainWindow;
 
 app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('disable-features', 'AutofillServerCommunication');
 
 app.whenReady().then(() => {
     mainWindow = createMainWindow();

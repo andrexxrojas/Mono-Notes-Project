@@ -33,6 +33,7 @@ export function createMainWindow() {
         appServe(win).then(() => win.loadURL("app://-"));
     } else {
         win.loadURL("http://localhost:3000");
+        win.webContents.openDevTools({ mode: "undocked" });
     }
 
     return win;

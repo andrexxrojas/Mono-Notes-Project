@@ -7,7 +7,17 @@
 }
 
 .note-title:empty::before {
-    content: attr(data-placeholder);
+    content: attr(data-placeholder) "\200B";
     color: var(--text-secondary);
     pointer-events: none;
+}
+
+.note-title {
+    position: relative !important;
+    z-index: 1;
+    background: white;
+    isolation: isolate;
+    transform: translateZ(0);
+    will-change: contents, transform;
+    caret-color: black;
 }

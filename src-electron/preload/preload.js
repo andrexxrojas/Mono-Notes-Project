@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 const require = createRequire(import.meta.url);
 
 const nativeModulePath = path.join(__dirname, '..', 'rust', 'notes_backend.win32-x64-msvc.node');
-console.log("Loading native module from:", nativeModulePath);
 
 const { NotesDb } = require(nativeModulePath);
 
