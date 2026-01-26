@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld("electron", {
         getNote: (id) => db.getNote(id),
         updateNoteTitle: (id, title) => db.updateNoteTitle(id, title),
         addBlock: (noteId, type, content) => db.addBlock(noteId, type, content),
+        updateBlock: (blockId, content) => db.updateBlock(blockId, content),
         getBlocks: (noteId) => db.getBlocks(noteId),
     },
 });

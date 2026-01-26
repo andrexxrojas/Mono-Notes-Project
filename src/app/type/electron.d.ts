@@ -37,6 +37,7 @@ export interface ElectronAPI {
         updateNoteTitle: (id: string, title: string) => void;
         addBlock: (noteId: string, type: string, content: string) => string;
         getBlocks: (noteId: string) => Block[];
+        updateBlock: (blockId: string, content: string) => void;
     };
 }
 

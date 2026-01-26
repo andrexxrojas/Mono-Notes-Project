@@ -1,0 +1,16 @@
+.textBlock {
+    width: 100%;
+    font-family: var(--font-regular);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    outline: none;
+    padding: 4px 0;
+    min-height: 24px;
+    cursor: text;
+}
+
+.textBlock.focused:empty::before {
+    content: attr(data-placeholder);
+    color: #91918E;
+    pointer-events: none;
+}

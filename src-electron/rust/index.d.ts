@@ -23,5 +23,6 @@ export declare class NotesDb {
   getNote(id: string): Note
   updateNoteTitle(noteId: string, title: string): void
   addBlock(noteId: string, blockType: string, content: string): string
+  updateBlock(blockId: string, content: string): void
   getBlocks(noteId: string): Array<Block>
 }

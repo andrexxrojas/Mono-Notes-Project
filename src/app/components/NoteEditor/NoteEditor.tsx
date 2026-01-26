@@ -1,10 +1,16 @@
 import styles from "./NoteEditor.module.css";
 import { Note } from "@/app/type/electron";
+import BlockFactory from "@/app/components/NoteEditor/blocks/BlockFactory";
+import {Block} from "@babel/types";
 
 export default function NoteEditor({ note }: { note: Note }) {
-    return (
-        <div className={styles["note-editor"]}>
+	const blocks = window.electron.notes.getBlocks(note.id);
 
-        </div>
-    )
+	return (
+		<div className={styles["note-editor"]}>
+			{blocks.map((block) => (
+				<BlockFactory key={block.id} block={block}/>
+			))}
+		</div>
+	);
 }

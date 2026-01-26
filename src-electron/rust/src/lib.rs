@@ -151,6 +151,17 @@ impl NotesDb {
     }
 
     #[napi]
+    pub fn update_block(&self, block_id: String, content: String) -> napi::Result<()> {
+        let conn = self.conn.lock().unwrap();
+        conn.execute(
+            "UPDATE blocks SET content = ?1 WHERE id = ?2",
+            params![content, block_id],
+        )
+        .map_err(to_napi_error)?;
+        Ok(())
+    }
+
+    #[napi]
     pub fn get_blocks(&self, note_id: String) -> napi::Result<Vec<Block>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare("SELECT id, note_id, type, content, position FROM blocks WHERE note_id = ?1 ORDER BY position ASC")

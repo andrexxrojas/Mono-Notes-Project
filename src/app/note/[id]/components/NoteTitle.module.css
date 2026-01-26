@@ -7,7 +7,7 @@
 }
 
 .note-title:empty::before {
-    content: attr(data-placeholder) "\200B";
+    content: attr(data-placeholder);
     color: var(--text-secondary);
     pointer-events: none;
 }
