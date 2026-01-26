@@ -1,6 +1,8 @@
 .note-page-wrapper {
     width: 100%;
+    height: 100%;
     display: flex;
+    overflow-y: auto !important;
     justify-content: center;
 }
 

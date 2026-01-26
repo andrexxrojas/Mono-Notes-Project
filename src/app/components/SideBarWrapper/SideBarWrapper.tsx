@@ -40,7 +40,7 @@ export default function SideBarWrapper({ children }: { children: React.ReactNode
             <div className={styles["app-shell"]}>
                 <NotesProvider>
                     <SideBar isOpen={sidebarOpen} />
-                    <main className={styles["main-container"]}>{children}</main>
+                    <main className={`${styles["main-container"]} ${sidebarOpen ? styles["sidebar-active"] : ""}`}>{children}</main>
                 </NotesProvider>
             </div>
         </>

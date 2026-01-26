@@ -1,7 +1,7 @@
 "use client";
 
 import { Block } from "@/app/type/electron";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
 import focusAndSelectAll from "@/app/components/NoteEditor/helper/focusAndSelectAll";
 import styles from "./TextBlock.module.css";
 
@@ -9,11 +9,18 @@ interface TextBlockProps {
     block: Block;
     addBlockBelow?: (block: Block) => Promise<void>;
     autoFocus?: boolean;
+    onMeasured?: (height: number) => void;
 }
 
-export default function TextBlock({ block, addBlockBelow, autoFocus  }: TextBlockProps) {
+export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured }: TextBlockProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);
+
+    useLayoutEffect(() => {
+        if (divRef.current && onMeasured) {
+            onMeasured(divRef.current.offsetHeight);
+        }
+    }, [onMeasured, block]);
 
     useEffect(() => {
         if (autoFocus && divRef.current) {

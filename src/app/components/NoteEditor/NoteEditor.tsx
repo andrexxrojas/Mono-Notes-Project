@@ -1,21 +1,20 @@
-import styles from "./NoteEditor.module.css";
+import React from "react";
 import { Note } from "@/app/type/electron";
-import BlockFactory from "@/app/components/NoteEditor/blocks/BlockFactory";
+import styles from "./NoteEditor.module.css";
 import { useBlocks } from "@/app/components/NoteEditor/hooks/useBlocks";
+import VirtualizedBlocks from "@/app/components/NoteEditor/blocks/VirtualizedBlocks";
 
-export default function NoteEditor({ note }: { note: Note }) {
+export default function NoteEditor({ note, scrollContainerRef }: { note: Note, scrollContainerRef: React.RefObject<HTMLDivElement | null> }) {
 	const { blocks, addBlockBelow, focusedBlockId } = useBlocks(note.id);
 
 	return (
 		<div className={styles["note-editor"]}>
-			{blocks.map((block) => (
-				<BlockFactory
-					key={block.id}
-					block={block}
-					addBlockBelow={addBlockBelow}
-					autoFocus={block.id === focusedBlockId}
-				/>
-			))}
+			<VirtualizedBlocks
+				blocks={blocks}
+				scrollContainerRef={scrollContainerRef}
+				addBlockBelow={addBlockBelow}
+				focusedBlockId={focusedBlockId}
+			/>
 		</div>
 	);
 }

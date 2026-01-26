@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Note } from "@/app/type/electron";
 import NoteTitle from "@/app/note/[id]/components/NoteTitle";
@@ -9,6 +9,7 @@ import styles from "./page.module.css";
 
 export default function NotePage() {
     const params = useParams();
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [note, setNote] = useState<Note | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -29,13 +30,13 @@ export default function NotePage() {
     }, [params.id]);
 
     return (
-        <div className={styles["note-page-wrapper"]}>
+        <div ref={wrapperRef} className={styles["note-page-wrapper"]}>
             <div className={styles["note-page-container"]}>
                 <div className={styles["note-info"]}>
                     {note?.id && <NoteTitle note={note} />}
                 </div>
                 {note && (
-                    <NoteEditor note={note}/>
+                    <NoteEditor note={note} scrollContainerRef={wrapperRef}/>
                 )}
             </div>
         </div>

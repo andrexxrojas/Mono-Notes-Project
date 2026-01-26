@@ -5,9 +5,10 @@ interface BlockFactoryProps {
     block: Block;
     addBlockBelow?: (block: Block) => Promise<void>;
     autoFocus?: boolean;
+    onMeasured?: (height: number) => void;
 }
 
-export default function BlockFactory({ block, addBlockBelow, autoFocus }: BlockFactoryProps) {
+export default function BlockFactory({ block, addBlockBelow, autoFocus, onMeasured }: BlockFactoryProps) {
     switch (block.block_type) {
         default:
             return (
@@ -16,6 +17,7 @@ export default function BlockFactory({ block, addBlockBelow, autoFocus }: BlockF
                     block={block}
                     addBlockBelow={addBlockBelow}
                     autoFocus={autoFocus}
+                    onMeasured={onMeasured}
                 />
             );
     }
