@@ -1,16 +1,27 @@
 "use client";
 
 import { Block } from "@/app/type/electron";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import focusAndSelectAll from "@/app/components/NoteEditor/helper/focusAndSelectAll";
 import styles from "./TextBlock.module.css";
 
 interface TextBlockProps {
     block: Block;
+    addBlockBelow?: (block: Block) => Promise<void>;
+    autoFocus?: boolean;
 }
 
-export default function TextBlock({ block }: TextBlockProps) {
+export default function TextBlock({ block, addBlockBelow, autoFocus  }: TextBlockProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);
+
+    useEffect(() => {
+        if (autoFocus && divRef.current) {
+            setTimeout(() => {
+                focusAndSelectAll(divRef.current!);
+            }, 0);
+        }
+    }, [autoFocus]);
 
     const handleUpdate = () => {
         const text = divRef.current?.textContent?.trim() || "";
@@ -28,11 +39,15 @@ export default function TextBlock({ block }: TextBlockProps) {
         setIsFocused(true);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = async (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter") {
             e.preventDefault();
             void handleUpdate();
             divRef.current?.blur();
+
+            if (addBlockBelow) {
+                await addBlockBelow(block);
+            }
         }
     };
 

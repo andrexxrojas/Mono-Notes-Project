@@ -14,19 +14,16 @@ pub struct Note {
     pub icon: Option<String>,
 }
 
-// For napi v2, we need to use a different approach for enums
-// Use string in the struct and validate it
 #[napi(object)]
 #[derive(Clone)]
 pub struct Block {
     pub id: String,
     pub note_id: String,
-    pub block_type: String, // Changed to String for napi v2
+    pub block_type: String,
     pub content: String,
     pub position: i64,
 }
 
-// Helper function to convert rusqlite errors to napi errors
 fn to_napi_error(err: rusqlite::Error) -> Error {
     Error::from_reason(format!("Database error: {}", err))
 }
