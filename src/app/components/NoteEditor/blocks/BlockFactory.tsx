@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Block } from "@/app/type/electron";
 import TextBlock from "@/app/components/NoteEditor/blocks/TextBlock/TextBlock";
 
@@ -8,12 +9,11 @@ interface BlockFactoryProps {
     onMeasured?: (height: number) => void;
 }
 
-export default function BlockFactory({ block, addBlockBelow, autoFocus, onMeasured }: BlockFactoryProps) {
+const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured }: BlockFactoryProps) => {
     switch (block.block_type) {
         default:
             return (
                 <TextBlock
-                    key={block.id}
                     block={block}
                     addBlockBelow={addBlockBelow}
                     autoFocus={autoFocus}
@@ -21,4 +21,15 @@ export default function BlockFactory({ block, addBlockBelow, autoFocus, onMeasur
                 />
             );
     }
-}
+}, (prevProps, nextProps) => {
+    // Custom comparison logic
+    return (
+        prevProps.block.id === nextProps.block.id &&
+        prevProps.block.content === nextProps.block.content &&
+        prevProps.autoFocus === nextProps.autoFocus
+        // If your Block type has a 'type' or 'data' field, add those here too
+    );
+});
+
+BlockFactory.displayName = "BlockFactory";
+export default BlockFactory;

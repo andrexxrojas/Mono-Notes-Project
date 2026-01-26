@@ -29,6 +29,21 @@ export default function NotePage() {
         void fetchNote();
     }, [params.id]);
 
+    const [blockCount, setBlockCount] = useState(1000);
+    const [performanceLog, setPerformanceLog] = useState([]);
+
+    const testBlocks = Array.from({ length: blockCount }, (_, i) => ({
+        id: `test-${i}`,
+        type: 'paragraph',
+        content: `Test block ${i}`
+    }));
+
+    const runTest = () => {
+        const start = performance.now();
+        // Trigger re-render with many blocks
+        // Measure and log results
+    };
+
     return (
         <div ref={wrapperRef} className={styles["note-page-wrapper"]}>
             <div className={styles["note-page-container"]}>
