@@ -2,6 +2,7 @@
 
 import { Block } from "@/app/type/electron";
 import React, { useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
+import { DotsSixVerticalIcon } from "@phosphor-icons/react";
 import focusAndSelectAll from "@/app/components/NoteEditor/helper/focusAndSelectAll";
 import styles from "./TextBlock.module.css";
 
@@ -112,22 +113,26 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
     }, []);
 
     return (
-        <div
-            id={block.id}
-            ref={divRef}
-            className={`${styles["text-block"]} ${isFocused ? styles["focused"] : ""}`}
-            contentEditable
-            suppressContentEditableWarning
-            data-placeholder="Type '/' for commands"
-            onInput={handleInput}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
-            spellCheck={false}
-            autoCorrect="off"
-            autoCapitalize="off"
-        >
-            {block.content ? block.content : null}
+        <div className="block-wrapper">
+            <div className="hover-zone" />
+            <DotsSixVerticalIcon size={21} className="drag-icon"/>
+            <div
+                id={block.id}
+                ref={divRef}
+                className={`${styles["text-block"]} ${isFocused ? styles["focused"] : ""}`}
+                contentEditable
+                suppressContentEditableWarning
+                data-placeholder="Type '/' for commands"
+                onInput={handleInput}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                onKeyDown={handleKeyDown}
+                spellCheck={false}
+                autoCorrect="off"
+                autoCapitalize="off"
+            >
+                {block.content ? block.content : null}
+            </div>
         </div>
     );
 }

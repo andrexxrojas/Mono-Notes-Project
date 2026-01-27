@@ -10,15 +10,6 @@ export function useBlocks(noteId: string) {
     useEffect(() => {
         const loadBlocks = async () => {
             const fetched = window.electron.notes.getBlocks(noteId);
-
-            console.table(
-                fetched.map(b => ({
-                    id: b.id,
-                    prev: b.prevId,
-                    next: b.nextId,
-                }))
-            );
-
             const map = new Map(fetched.map(b => [b.id, b]));
             let head = fetched.find(b => !b.prevId) || null;
             const ordered: Block[] = [];
