@@ -18,7 +18,6 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
     const lastHeightRef = useRef<number>(0);
     const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Debounced height measurement
     const measureHeight = useCallback(() => {
         if (!divRef.current || !onMeasured) return;
 
@@ -29,7 +28,6 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
         }
     }, [onMeasured]);
 
-    // Measure height with RAF batching
     useLayoutEffect(() => {
         if (!onMeasured) return;
 
@@ -41,24 +39,17 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
             observer.observe(divRef.current);
         }
 
-        // Initial measurement
         requestAnimationFrame(measureHeight);
 
         return () => observer.disconnect();
     }, [measureHeight, onMeasured]);
 
-    // Auto-focus - FIXED: Use effect with proper cleanup
     useEffect(() => {
         if (!autoFocus || !divRef.current) return;
-
-        const timer = setTimeout(() => {
-            focusAndSelectAll(divRef.current!);
-        }, 10); // Small delay to avoid layout thrashing
-
+        const timer = setTimeout(() => focusAndSelectAll(divRef.current!), 10);
         return () => clearTimeout(timer);
     }, [autoFocus]);
 
-    // Debounced update function
     const handleUpdate = useCallback(() => {
         if (updateTimeoutRef.current) {
             clearTimeout(updateTimeoutRef.current);
@@ -69,13 +60,12 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
             if (text !== block.content) {
                 window.electron.notes.updateBlock(block.id, text);
             }
-        }, 500); // 500ms debounce
+        }, 500);
     }, [block.id, block.content]);
 
-    // Stable event handlers
     const handleBlur = useCallback(() => {
         setIsFocused(false);
-        handleUpdate(); // Immediate update on blur
+        handleUpdate();
     }, [handleUpdate]);
 
     const handleFocus = useCallback(() => {
@@ -99,7 +89,7 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
             divRef.current?.blur();
 
             if (addBlockBelow) {
-                await addBlockBelow(block);
+                const newBlock = await addBlockBelow(block);
             }
         }
     }, [block, addBlockBelow]);
@@ -123,8 +113,9 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
 
     return (
         <div
+            id={block.id}
             ref={divRef}
-            className={`${styles.textBlock} ${isFocused ? styles.focused : ""}`}
+            className={`${styles["text-block"]} ${isFocused ? styles["focused"] : ""}`}
             contentEditable
             suppressContentEditableWarning
             data-placeholder="Type '/' for commands"

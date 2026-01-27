@@ -9,10 +9,11 @@ export interface Note {
 
 export interface Block {
     id: string;
-    note_id: string;
-    block_type: string;
+    noteId: string;
+    blockType: string;
     content: string;
-    position: number;
+    prevId?: string;
+    nextId?: string;
 }
 
 export interface UIState {
@@ -35,7 +36,7 @@ export interface ElectronAPI {
         getNotes: () => Note[];
         getNote: (id: string) => Note;
         updateNoteTitle: (id: string, title: string) => void;
-        addBlock: (noteId: string, type: string, content: string) => string;
+        addBlockBelow: (noteId: string, currentBlockId: string, type: string, content: string) => string;
         getBlocks: (noteId: string) => Block[];
         updateBlock: (blockId: string, content: string) => void;
     };

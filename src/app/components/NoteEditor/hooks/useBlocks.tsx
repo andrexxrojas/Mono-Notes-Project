@@ -10,35 +10,70 @@ export function useBlocks(noteId: string) {
     useEffect(() => {
         const loadBlocks = async () => {
             const fetched = window.electron.notes.getBlocks(noteId);
-            setBlocks(fetched);
+
+            console.table(
+                fetched.map(b => ({
+                    id: b.id,
+                    prev: b.prevId,
+                    next: b.nextId,
+                }))
+            );
+
+            const map = new Map(fetched.map(b => [b.id, b]));
+            let head = fetched.find(b => !b.prevId) || null;
+            const ordered: Block[] = [];
+
+            while (head) {
+                ordered.push(head);
+                head = head.nextId ? map.get(head.nextId) || null : null;
+            }
+
+            console.log("Blocks: ", ordered);
+
+            setBlocks(ordered);
         }
 
         void loadBlocks();
     }, [noteId]);
 
     const addBlockBelow = async (currentBlock: Block) => {
-        const newBlockId = window.electron.notes.addBlock(noteId, "text", "");
+        if (!currentBlock) return;
 
-        const currentIndex = blocks.findIndex(b => b.id === currentBlock.id);
-        const newPosition = currentIndex + 1;
+        const newBlockId = window.electron.notes.addBlockBelow(
+            noteId,
+            currentBlock.id,
+            "text",
+            ""
+        );
 
         const newBlock: Block = {
             id: newBlockId,
-            note_id: noteId,
-            block_type: "text",
+            noteId: noteId,
+            blockType: "text",
             content: "",
-            position: newPosition,
+            prevId: currentBlock.id,
+            nextId: currentBlock.nextId,
         };
 
-        const updatedBlocks = [
-            ...blocks.slice(0, newPosition),
-            newBlock,
-            ...blocks.slice(newPosition),
-        ].map((b, index) => ({ ...b, position: index }));
+        const updatedBlocksMap = new Map<string, Block>();
+        blocks.forEach(b => {
+            if (b.id === currentBlock.id) updatedBlocksMap.set(b.id, { ...b, nextId: newBlockId });
+            else if (b.id === currentBlock.nextId) updatedBlocksMap.set(b.id, { ...b, prevId: newBlockId });
+            else updatedBlocksMap.set(b.id, b);
+        });
+        updatedBlocksMap.set(newBlockId, newBlock);
 
-        setBlocks(updatedBlocks);
+        const map = updatedBlocksMap;
+        let head = Array.from(map.values()).find(b => !b.prevId) || null;
+        const ordered: Block[] = [];
+        while (head) {
+            ordered.push(head);
+            head = head.nextId ? map.get(head.nextId) || null : null;
+        }
+
+        setBlocks(ordered);
         setFocusedBlockId(newBlockId);
-    }
+    };
 
     return { blocks, setBlocks, addBlockBelow, focusedBlockId, setFocusedBlockId };
 }

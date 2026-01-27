@@ -21,7 +21,8 @@ pub struct Block {
     pub note_id: String,
     pub block_type: String,
     pub content: String,
-    pub position: i64,
+    pub prev_id: Option<String>,
+    pub next_id: Option<String>,
 }
 
 fn to_napi_error(err: rusqlite::Error) -> Error {
@@ -54,8 +55,11 @@ impl NotesDb {
                 note_id TEXT NOT NULL,
                 type TEXT NOT NULL,
                 content TEXT NOT NULL,
-                position INTEGER NOT NULL,
-                FOREIGN KEY(note_id) REFERENCES notes(id) ON DELETE CASCADE
+                prev_id TEXT,
+                next_id TEXT,
+                FOREIGN KEY(note_id) REFERENCES notes(id) ON DELETE CASCADE,
+                FOREIGN KEY(prev_id) REFERENCES blocks(id) ON DELETE SET NULL,
+                FOREIGN KEY(next_id) REFERENCES blocks(id) ON DELETE SET NULL
             );
             ",
         ).map_err(to_napi_error)?;
@@ -78,7 +82,7 @@ impl NotesDb {
 
         let block_id = Uuid::new_v4().to_string();
         conn.execute(
-            "INSERT INTO blocks (id, note_id, type, content, position) VALUES (?1, ?2, 'Paragraph', '', 0)",
+            "INSERT INTO blocks (id, note_id, type, content, prev_id, next_id) VALUES (?1, ?2, 'Paragraph', '', NULL, NULL)",
             params![block_id, note_id],
         ).map_err(to_napi_error)?;
 
@@ -130,21 +134,34 @@ impl NotesDb {
     }
 
     #[napi]
-    pub fn add_block(&self, note_id: String, block_type: String, content: String) -> napi::Result<String> {
+    pub fn add_block_below(&self, note_id: String, current_block_id: String, block_type: String, content: String) -> napi::Result<String> {
         let conn = self.conn.lock().unwrap();
-        let pos: i64 = conn.query_row(
-            "SELECT COUNT(*) FROM blocks WHERE note_id = ?1",
-            params![note_id],
-            |row| row.get(0),
+        let new_block_id = Uuid::new_v4().to_string();
+
+        let next_id: Option<String> = conn.query_row(
+            "SELECT next_id FROM blocks WHERE id = ?1",
+            params![current_block_id],
+            |row| row.get(0)
         ).map_err(to_napi_error)?;
 
-        let block_id = Uuid::new_v4().to_string();
         conn.execute(
-            "INSERT INTO blocks (id, note_id, type, content, position) VALUES (?1, ?2, ?3, ?4, ?5)",
-            params![block_id, note_id, block_type, content, pos],
+            "INSERT INTO blocks (id, note_id, type, content, prev_id, next_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![new_block_id, note_id, block_type, content, Some(current_block_id.clone()), next_id]
         ).map_err(to_napi_error)?;
 
-        Ok(block_id)
+        conn.execute(
+            "UPDATE blocks SET next_id = ?1 WHERE id = ?2",
+            params![new_block_id, current_block_id]
+        ).map_err(to_napi_error)?;
+
+        if let Some(next_block_id) = next_id {
+            conn.execute(
+                "UPDATE blocks SET prev_id = ?1 WHERE id = ?2",
+                params![new_block_id, next_block_id]
+            ).map_err(to_napi_error)?;
+        }
+
+        Ok(new_block_id)
     }
 
     #[napi]
@@ -161,7 +178,7 @@ impl NotesDb {
     #[napi]
     pub fn get_blocks(&self, note_id: String) -> napi::Result<Vec<Block>> {
         let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, note_id, type, content, position FROM blocks WHERE note_id = ?1 ORDER BY position ASC")
+        let mut stmt = conn.prepare("SELECT id, note_id, type, content, prev_id, next_id FROM blocks WHERE note_id = ?1")
             .map_err(to_napi_error)?;
 
         let blocks_iter = stmt.query_map([note_id], |row| {
@@ -170,7 +187,8 @@ impl NotesDb {
                 note_id: row.get(1)?,
                 block_type: row.get(2)?,
                 content: row.get(3)?,
-                position: row.get(4)?,
+                prev_id: row.get(4)?,
+                next_id: row.get(5)?,
             })
         }).map_err(to_napi_error)?;
 
