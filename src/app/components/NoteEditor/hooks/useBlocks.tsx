@@ -28,8 +28,6 @@ export function useBlocks(noteId: string) {
                 head = head.nextId ? map.get(head.nextId) || null : null;
             }
 
-            console.log("Blocks: ", ordered);
-
             setBlocks(ordered);
         }
 
