@@ -67,7 +67,14 @@ export default function VirtualizedBlocks({
             setTotalHeight(prev => prev + diff);
 
             const el = scrollContainerRef.current;
-            if (el && cum[idx] - height < el.scrollTop) el.scrollTop += diff;
+
+            if (el) {
+                const blockTop = idx > 0 ? cumulativeHeightsRef.current[idx - 1] : 0;
+                if (blockTop < el.scrollTop) {
+                    el.scrollTop += diff;
+                }
+            }
+
 
             setTopSpacer(start => (visibleRange.start > 0 ? cum[visibleRange.start - 1] : 0));
             if (!hasMeasured) { setHasMeasured(true); }
