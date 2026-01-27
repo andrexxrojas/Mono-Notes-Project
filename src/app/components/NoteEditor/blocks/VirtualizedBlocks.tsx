@@ -24,6 +24,7 @@ export default function VirtualizedBlocks({
                                           }: VirtualizedBlocksProps) {
     const [viewportHeight, setViewportHeight] = useState(0);
     const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
+    const [hasMeasured, setHasMeasured] = useState(false);
     const [totalHeight, setTotalHeight] = useState(0);
     const [topSpacer, setTopSpacer] = useState(0);
 
@@ -32,6 +33,8 @@ export default function VirtualizedBlocks({
     const scrollRafId = useRef<number | null>(null);
 
     const rebuildCumulative = useCallback(() => {
+        if (!hasMeasured) return;
+
         const count = blocks.length;
         if (cumulativeHeightsRef.current.length !== count) {
             cumulativeHeightsRef.current = new Float32Array(count);
@@ -45,7 +48,7 @@ export default function VirtualizedBlocks({
         }
 
         setTotalHeight(sum);
-    }, [blocks]);
+    }, [blocks, hasMeasured]);
 
     const updateHeight = useCallback(
         (id: string, height: number) => {
@@ -67,8 +70,9 @@ export default function VirtualizedBlocks({
             if (el && cum[idx] - height < el.scrollTop) el.scrollTop += diff;
 
             setTopSpacer(start => (visibleRange.start > 0 ? cum[visibleRange.start - 1] : 0));
+            if (!hasMeasured) { setHasMeasured(true); }
         },
-        [blocks, scrollContainerRef, visibleRange.start]
+        [blocks, scrollContainerRef, visibleRange.start, hasMeasured]
     );
 
     useLayoutEffect(() => {
@@ -157,7 +161,7 @@ export default function VirtualizedBlocks({
     const { start, end } = visibleRange;
 
     return (
-        <div style={{ height: totalHeight, position: "relative", width: "100%", contain: "layout" }}>
+        <div style={{ height: hasMeasured ? totalHeight : "auto", position: "relative", width: "100%", contain: "layout" }}>
             <div
                 style={{
                     position: "absolute",
