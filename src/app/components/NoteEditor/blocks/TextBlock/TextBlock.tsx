@@ -91,7 +91,7 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
             divRef.current?.blur();
 
             if (addBlockBelow) {
-                const newBlock = await addBlockBelow(block);
+                await addBlockBelow(block);
             }
         }
     }, [block, addBlockBelow]);

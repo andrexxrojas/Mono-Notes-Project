@@ -28,9 +28,6 @@ export function useBlocks(noteId: string) {
     const addBlockBelow = async (currentBlock: Block) => {
         if (!currentBlock) return;
 
-        const currentDiv = document.getElementById(currentBlock.id);
-        const latestContent = currentDiv?.textContent?.trim() ?? currentBlock.content;
-
         const newBlockId = window.electron.notes.addBlockBelow(
             noteId,
             currentBlock.id,
@@ -38,41 +35,46 @@ export function useBlocks(noteId: string) {
             ""
         );
 
-        const newBlock: Block = {
-            id: newBlockId,
-            noteId,
-            blockType: "text",
-            content: "",
-            prevId: currentBlock.id,
-            nextId: currentBlock.nextId,
-        };
-
         setBlocks(prevBlocks => {
-            const updatedBlocksMap = new Map(prevBlocks.map(b => [b.id, b]));
+            const updatedBlocksMap = new Map(
+                prevBlocks.map(b => {
+                    const div = document.getElementById(b.id);
+                    const domContent = div?.textContent?.trim() ?? b.content;
+                    return [b.id, { ...b, content: domContent }];
+                })
+            );
 
             const curr = updatedBlocksMap.get(currentBlock.id)!;
-            curr.nextId = newBlockId;
-            curr.content = latestContent;
-            updatedBlocksMap.set(currentBlock.id, curr);
+            const oldNextId = curr.nextId;
 
-            const nextBlockId = curr.nextId;
-            if (nextBlockId) {
-                const nextBlock = updatedBlocksMap.get(nextBlockId);
-                if (nextBlock && nextBlock.prevId === currentBlock.id) {
-                    nextBlock.prevId = newBlockId;
-                    updatedBlocksMap.set(nextBlockId, nextBlock);
-                    newBlock.nextId = nextBlockId;
+            curr.nextId = newBlockId;
+            updatedBlocksMap.set(curr.id, curr);
+
+            const newBlock: Block = {
+                id: newBlockId,
+                noteId,
+                blockType: "text",
+                content: "",
+                prevId: curr.id,
+                nextId: oldNextId || undefined,
+            };
+            updatedBlocksMap.set(newBlockId, newBlock);
+
+            if (oldNextId) {
+                const oldNext = updatedBlocksMap.get(oldNextId);
+                if (oldNext) {
+                    oldNext.prevId = newBlockId;
+                    updatedBlocksMap.set(oldNextId, oldNext);
                 }
             }
 
-            updatedBlocksMap.set(newBlockId, newBlock);
-
-            const map = updatedBlocksMap;
-            let head = Array.from(map.values()).find(b => !b.prevId) || null;
             const ordered: Block[] = [];
-            while (head) {
+            let head = Array.from(updatedBlocksMap.values()).find(b => !b.prevId) || null;
+            const visited = new Set<string>();
+            while (head && !visited.has(head.id)) {
+                visited.add(head.id);
                 ordered.push(head);
-                head = head.nextId ? map.get(head.nextId) || null : null;
+                head = head.nextId ? updatedBlocksMap.get(head.nextId) || null : null;
             }
 
             return ordered;
