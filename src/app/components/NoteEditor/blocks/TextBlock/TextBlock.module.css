@@ -16,7 +16,7 @@
     font-family: var(--font-regular) !important;
 }
 
-.textBlock.focused:empty::before {
+.text-block.focused:empty::before {
     content: attr(data-placeholder);
     color: #91918E;
     pointer-events: none;
