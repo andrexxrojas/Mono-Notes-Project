@@ -33,8 +33,6 @@ export default function VirtualizedBlocks({
     const scrollRafId = useRef<number | null>(null);
 
     const rebuildCumulative = useCallback(() => {
-        if (!hasMeasured) return;
-
         const count = blocks.length;
         if (cumulativeHeightsRef.current.length !== count) {
             cumulativeHeightsRef.current = new Float32Array(count);
@@ -48,7 +46,7 @@ export default function VirtualizedBlocks({
         }
 
         setTotalHeight(sum);
-    }, [blocks, hasMeasured]);
+    }, [blocks]);
 
     const updateHeight = useCallback(
         (id: string, height: number) => {
@@ -82,11 +80,35 @@ export default function VirtualizedBlocks({
         [blocks, scrollContainerRef, visibleRange.start, hasMeasured]
     );
 
+    const findIndex = useCallback((offset: number) => {
+        const cum = cumulativeHeightsRef.current;
+        if (!cum.length) return 0;
+
+        let low = 0, high = cumulativeHeightsRef.current.length - 1;
+        while (low <= high) {
+            const mid = (low + high) >>> 1;
+            if (cum[mid] < offset) low = mid + 1;
+            else high = mid - 1;
+        }
+        return low;
+    }, []);
+
     useLayoutEffect(() => {
         const el = scrollContainerRef.current;
         if (!el) return;
 
-        const ro = new ResizeObserver(() => setViewportHeight(el.clientHeight));
+        const ro = new ResizeObserver(() => {
+            const el = scrollContainerRef.current;
+            if (!el) return;
+
+            const vh = el.clientHeight;
+            setViewportHeight(vh);
+
+            requestAnimationFrame(() => {
+                rebuildCumulative();
+            });
+        });
+
         ro.observe(el);
 
         requestAnimationFrame(() => {
@@ -95,18 +117,6 @@ export default function VirtualizedBlocks({
 
         return () => ro.disconnect();
     }, [scrollContainerRef, rebuildCumulative]);
-
-    const findIndex = useCallback((offset: number) => {
-        let low = 0,
-            high = cumulativeHeightsRef.current.length - 1;
-        const cum = cumulativeHeightsRef.current;
-        while (low <= high) {
-            const mid = (low + high) >>> 1;
-            if (cum[mid] < offset) low = mid + 1;
-            else high = mid - 1;
-        }
-        return low;
-    }, []);
 
     useEffect(() => {
         const el = scrollContainerRef.current;
@@ -154,16 +164,21 @@ export default function VirtualizedBlocks({
     }, [blocks.length, viewportHeight, scrollContainerRef, findIndex]);
 
     useEffect(() => {
-        const init = () => {
-            const estimatedVisible = Math.ceil(viewportHeight / DEFAULT_BLOCK_HEIGHT);
-            setVisibleRange({ start: 0, end: estimatedVisible + BASE_BUFFER });
-            setTopSpacer(0);
-        }
+        const el = scrollContainerRef.current;
+        if (!el || !viewportHeight) return;
 
-        if (viewportHeight && blocks.length > 0) {
-            init();
-        }
-    }, [viewportHeight, blocks.length]);
+        requestAnimationFrame(() => {
+            const scrollTop = el.scrollTop;
+            const startIdx = findIndex(scrollTop);
+            const endIdx = findIndex(scrollTop + viewportHeight);
+
+            const start = Math.max(0, startIdx - BASE_BUFFER);
+            const end = Math.min(blocks.length - 1, endIdx + BASE_BUFFER);
+
+            setVisibleRange({ start, end });
+            setTopSpacer(start > 0 ? cumulativeHeightsRef.current[start - 1] : 0);
+        });
+    }, [viewportHeight, findIndex, blocks.length, scrollContainerRef]);
 
     const { start, end } = visibleRange;
 
