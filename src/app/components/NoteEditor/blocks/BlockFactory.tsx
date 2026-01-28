@@ -7,9 +7,10 @@ interface BlockFactoryProps {
     addBlockBelow?: (block: Block) => Promise<void>;
     autoFocus?: boolean;
     onMeasured?: (height: number) => void;
+    updateBlockContent: (blockId: string, content: any) => void
 }
 
-const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured }: BlockFactoryProps) => {
+const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured, updateBlockContent }: BlockFactoryProps) => {
     switch (block.blockType) {
         default:
             return (
@@ -18,6 +19,7 @@ const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured }: Bloc
                     addBlockBelow={addBlockBelow}
                     autoFocus={autoFocus}
                     onMeasured={onMeasured}
+                    updateBlockContent={updateBlockContent}
                 />
             );
     }

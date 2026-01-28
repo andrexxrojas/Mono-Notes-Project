@@ -11,9 +11,10 @@ interface TextBlockProps {
     addBlockBelow?: (block: Block) => Promise<void>;
     autoFocus?: boolean;
     onMeasured?: (height: number) => void;
+    updateBlockContent: (blockId: string, content: any) => void
 }
 
-export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured }: TextBlockProps) {
+export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured, updateBlockContent }: TextBlockProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);
     const lastHeightRef = useRef<number>(0);
@@ -52,18 +53,9 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
     }, [autoFocus]);
 
     const handleUpdate = useCallback(() => {
-        if (updateTimeoutRef.current) {
-            clearTimeout(updateTimeoutRef.current);
-        }
-
-        updateTimeoutRef.current = setTimeout(() => {
-            const text = divRef.current?.innerText ?? "";
-
-            if (text !== block.content) {
-                window.electron.notes.updateBlock(block.id, text);
-            }
-        }, 500);
-    }, [block.id, block.content]);
+        const text = divRef.current?.innerText ?? "";
+        updateBlockContent(block.id, text);
+    }, [updateBlockContent, block.id]);
 
     const handleBlur = useCallback(() => {
         setIsFocused(false);

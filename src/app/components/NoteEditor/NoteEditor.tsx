@@ -5,7 +5,7 @@ import { useBlocks } from "@/app/components/NoteEditor/hooks/useBlocks";
 import VirtualizedBlocks from "@/app/components/NoteEditor/blocks/VirtualizedBlocks";
 
 export default function NoteEditor({ note, scrollContainerRef }: { note: Note, scrollContainerRef: React.RefObject<HTMLDivElement | null> }) {
-	const { blocks, addBlockBelow, focusedBlockId } = useBlocks(note.id);
+	const { blocks, addBlockBelow, focusedBlockId, updateBlockContent } = useBlocks(note.id);
 
 	return (
 		<div className={styles["note-editor"]}>
@@ -14,6 +14,7 @@ export default function NoteEditor({ note, scrollContainerRef }: { note: Note, s
 				scrollContainerRef={scrollContainerRef}
 				addBlockBelow={addBlockBelow}
 				focusedBlockId={focusedBlockId}
+				updateBlockContent={updateBlockContent}
 			/>
 		</div>
 	);
