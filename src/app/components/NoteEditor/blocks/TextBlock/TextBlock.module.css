@@ -7,6 +7,15 @@
     padding: 4px 0;
     min-height: 24px;
     cursor: text;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    border: 1px solid red;
+}
+
+.text-block * {
+    font-family: var(--font-regular) !important;
 }
 
 .textBlock.focused:empty::before {

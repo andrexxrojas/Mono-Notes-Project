@@ -4,6 +4,7 @@
     display: flex;
     overflow-y: auto !important;
     justify-content: center;
+    scrollbar-gutter: stable;
 }
 
 .note-page-container {

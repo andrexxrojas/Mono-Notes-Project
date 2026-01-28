@@ -10,7 +10,7 @@ interface BlockFactoryProps {
 }
 
 const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured }: BlockFactoryProps) => {
-    switch (block.block_type) {
+    switch (block.blockType) {
         default:
             return (
                 <TextBlock

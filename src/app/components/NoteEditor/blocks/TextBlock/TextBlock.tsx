@@ -57,7 +57,8 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
         }
 
         updateTimeoutRef.current = setTimeout(() => {
-            const text = divRef.current?.textContent?.trim() || "";
+            const text = divRef.current?.innerText ?? "";
+
             if (text !== block.content) {
                 window.electron.notes.updateBlock(block.id, text);
             }
@@ -82,7 +83,7 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
                 updateTimeoutRef.current = null;
             }
 
-            const text = divRef.current?.textContent?.trim() || "";
+            const text = divRef.current?.innerText ?? "";
             if (text !== block.content) {
                 window.electron.notes.updateBlock(block.id, text);
             }
@@ -103,6 +104,39 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
 
         handleUpdate();
     }, [handleUpdate]);
+
+    const handlePaste = useCallback(
+        (e: React.ClipboardEvent<HTMLDivElement>) => {
+            e.preventDefault();
+
+            const text = e.clipboardData.getData("text/plain");
+            if (!text) return;
+
+            const selection = window.getSelection();
+            if (!selection || selection.rangeCount === 0) return;
+
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+
+            const lines = text.split(/\r?\n/);
+            const fragment = document.createDocumentFragment();
+
+            lines.forEach((line, index) => {
+                fragment.appendChild(document.createTextNode(line));
+                if (index < lines.length - 1) {
+                    fragment.appendChild(document.createElement("br"));
+                }
+            });
+
+            range.insertNode(fragment);
+            range.collapse(false);
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+        },
+        []
+    );
+
 
     useEffect(() => {
         return () => {
@@ -127,6 +161,7 @@ export default function TextBlock({ block, addBlockBelow, autoFocus, onMeasured 
                 onBlur={handleBlur}
                 onFocus={handleFocus}
                 onKeyDown={handleKeyDown}
+                onPaste={handlePaste}
                 spellCheck={false}
                 autoCorrect="off"
                 autoCapitalize="off"
