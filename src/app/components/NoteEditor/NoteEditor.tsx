@@ -3,19 +3,27 @@ import { Note } from "@/app/type/electron";
 import styles from "./NoteEditor.module.css";
 import { useBlocks } from "@/app/components/NoteEditor/hooks/useBlocks";
 import VirtualizedBlocks from "@/app/components/NoteEditor/blocks/VirtualizedBlocks";
+import { BlockActionsProvider } from "@/app/context/BlockActionsContext";
 
 export default function NoteEditor({ note, scrollContainerRef }: { note: Note, scrollContainerRef: React.RefObject<HTMLDivElement | null> }) {
-	const { blocks, addBlockBelow, focusedBlockId, updateBlockContent } = useBlocks(note.id);
+	const { blocks, addBlockBelow, focusedBlockId, updateBlockContent, setFocusedBlockId } = useBlocks(note.id);
 
 	return (
-		<div className={styles["note-editor"]}>
-			<VirtualizedBlocks
-				blocks={blocks}
-				scrollContainerRef={scrollContainerRef}
-				addBlockBelow={addBlockBelow}
-				focusedBlockId={focusedBlockId}
-				updateBlockContent={updateBlockContent}
-			/>
-		</div>
+		<BlockActionsProvider
+			value={{
+				addBlockBelow,
+				updateBlockContent,
+				setFocusedBlockId,
+				focusedBlockId,
+			}}
+		>
+			<div className={styles["note-editor"]}>
+				<VirtualizedBlocks
+					blocks={blocks}
+					scrollContainerRef={scrollContainerRef}
+					focusedBlockId={focusedBlockId}
+				/>
+			</div>
+		</BlockActionsProvider>
 	);
 }

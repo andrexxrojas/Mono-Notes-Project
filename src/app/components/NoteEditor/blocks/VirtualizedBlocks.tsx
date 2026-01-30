@@ -12,17 +12,13 @@ const FAST_SCROLL_BUFFER = 100;
 interface VirtualizedBlocksProps {
     blocks: Block[];
     scrollContainerRef: React.RefObject<HTMLDivElement | null>;
-    addBlockBelow: (block: Block) => Promise<void>;
     focusedBlockId: string | null;
-    updateBlockContent: (blockId: string, content: any) => void
 }
 
 export default function VirtualizedBlocks({
     blocks,
     scrollContainerRef,
-    addBlockBelow,
     focusedBlockId,
-    updateBlockContent,
                                           }: VirtualizedBlocksProps) {
     const [viewportHeight, setViewportHeight] = useState(0);
     const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
@@ -200,10 +196,8 @@ export default function VirtualizedBlocks({
                     <BlockFactory
                         key={block.id}
                         block={block}
-                        addBlockBelow={addBlockBelow}
                         autoFocus={block.id === focusedBlockId}
                         onMeasured={height => updateHeight(block.id, height)}
-                        updateBlockContent={updateBlockContent}
                     />
                 ))}
             </div>

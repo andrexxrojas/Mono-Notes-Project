@@ -2,16 +2,17 @@ import { memo } from "react";
 import { Block } from "@/app/type/electron";
 import TextBlock from "@/app/components/NoteEditor/blocks/TextBlock/TextBlock";
 import BlockWrapper from "@/app/components/NoteEditor/blocks/BlockWrapper/BlockWrapper";
+import { useBlockActions } from "@/app/context/BlockActionsContext";
 
 interface BlockFactoryProps {
     block: Block;
-    addBlockBelow?: (block: Block) => Promise<void>;
     autoFocus?: boolean;
     onMeasured?: (height: number) => void;
-    updateBlockContent: (blockId: string, content: any) => void
 }
 
-const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured, updateBlockContent }: BlockFactoryProps) => {
+const BlockFactory = memo(({ block, autoFocus, onMeasured }: BlockFactoryProps) => {
+    const { addBlockBelow, updateBlockContent } = useBlockActions();
+
     switch (block.blockType) {
         default:
             return (
