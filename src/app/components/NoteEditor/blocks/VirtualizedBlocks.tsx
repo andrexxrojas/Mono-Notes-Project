@@ -5,9 +5,9 @@ import BlockFactory from "./BlockFactory";
 import { Block } from "@/app/type/electron";
 
 const DEFAULT_BLOCK_HEIGHT = 100;
-const BASE_BUFFER = 30;
-const FAST_SCROLL_VELOCITY = 100;
-const FAST_SCROLL_BUFFER = 100;
+const BASE_BUFFER = 80;
+const FAST_SCROLL_VELOCITY = 200;
+const FAST_SCROLL_BUFFER = 60;
 
 interface VirtualizedBlocksProps {
     blocks: Block[];
