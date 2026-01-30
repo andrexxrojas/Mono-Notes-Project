@@ -24,6 +24,10 @@ contextBridge.exposeInMainWorld("electron", {
         get: () => ipcRenderer.invoke("ui:get"),
         patch: (patch) => ipcRenderer.invoke("ui:patch", patch),
     },
+    settings: {
+        get: () => ipcRenderer.invoke("settings:get"),
+        patch: (patch) => ipcRenderer.invoke("settings:patch", patch),
+    },
     notes: {
         addNote: (title, icon) => db.addNote(title, icon),
         getNotes: () => db.getNotes(),
