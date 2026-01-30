@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Block } from "@/app/type/electron";
 import TextBlock from "@/app/components/NoteEditor/blocks/TextBlock/TextBlock";
+import BlockWrapper from "@/app/components/NoteEditor/blocks/BlockWrapper/BlockWrapper";
 
 interface BlockFactoryProps {
     block: Block;
@@ -14,13 +15,15 @@ const BlockFactory = memo(({ block, addBlockBelow, autoFocus, onMeasured, update
     switch (block.blockType) {
         default:
             return (
-                <TextBlock
-                    block={block}
-                    addBlockBelow={addBlockBelow}
-                    autoFocus={autoFocus}
-                    onMeasured={onMeasured}
-                    updateBlockContent={updateBlockContent}
-                />
+                <BlockWrapper>
+                    <TextBlock
+                        block={block}
+                        addBlockBelow={addBlockBelow}
+                        autoFocus={autoFocus}
+                        onMeasured={onMeasured}
+                        updateBlockContent={updateBlockContent}
+                    />
+                </BlockWrapper>
             );
     }
 }, (prevProps, nextProps) => {

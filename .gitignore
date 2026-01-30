@@ -40,6 +40,7 @@ next-env.d.ts
 
 /.idea/
 /src-electron/rust/target
+/src-electron/rust/target/release
 /src-electron/notes.sqlite
 /src-electron/rust/index.d.ts
 /src-electron/rust/index.js
