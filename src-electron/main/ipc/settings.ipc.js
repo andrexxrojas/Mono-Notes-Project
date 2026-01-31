@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { SettingsStore } from "./settingsStore";
+import { SettingsStore } from "../settingsStore.js";
 
 ipcMain.handle("settings:get", () => {
     return SettingsStore.get();

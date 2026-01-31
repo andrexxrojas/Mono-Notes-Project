@@ -15,11 +15,7 @@ interface VirtualizedBlocksProps {
     focusedBlockId: string | null;
 }
 
-export default function VirtualizedBlocks({
-    blocks,
-    scrollContainerRef,
-    focusedBlockId,
-                                          }: VirtualizedBlocksProps) {
+export default function VirtualizedBlocks({ blocks, scrollContainerRef, focusedBlockId }: VirtualizedBlocksProps) {
     const [viewportHeight, setViewportHeight] = useState(0);
     const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
     const [hasMeasured, setHasMeasured] = useState(false);

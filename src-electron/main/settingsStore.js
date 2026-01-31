@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { app } from "electron";
-import { DEFAULT_SETTINGS } from "./settings";
+import { DEFAULT_SETTINGS } from "./settings.js";
 
 const settingsPath = path.join(app.getPath("userData"), "settings.json");
 
