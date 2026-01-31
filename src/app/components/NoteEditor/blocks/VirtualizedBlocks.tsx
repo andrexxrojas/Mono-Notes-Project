@@ -195,7 +195,7 @@ export default function VirtualizedBlocks({ blocks, scrollContainerRef, focusedB
                         autoFocus={block.id === focusedBlockId}
                         onMeasured={height => updateHeight(block.id, height)}
                     />
-                ))}
+								))}
             </div>
         </div>
     );

@@ -1,17 +1,94 @@
 import styles from "./BlockWrapper.module.css";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import { DotsSixVerticalIcon } from "@phosphor-icons/react";
 
 interface BlockWrapperProps {
-    children: ReactNode
+    children: ReactNode;
+    blockId: string;
 }
 
-export default function BlockWrapper({ children }: BlockWrapperProps) {
-  return (
-    <div className={styles["block-wrapper"]}>
-      <div className={styles["extra-hover-zone"]} />
-      <DotsSixVerticalIcon size={21} className={styles["drag-icon"]}/>
-      {children}
-    </div>
-  );
+export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
+    const [dropPosition, setDropPosition] = useState<"top" | "bottom" | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
+
+    const handleDragStart = (e: React.DragEvent) => {
+        setIsDragging(true);
+
+        e.dataTransfer.setData("text/plain", blockId);
+        e.dataTransfer.effectAllowed = "move";
+
+        if (wrapperRef.current) {
+            const ghost = wrapperRef.current.cloneNode(true) as HTMLElement;
+            ghost.style.position = "absolute";
+            ghost.style.top = "-9999px";
+            ghost.style.left = "-9999px";
+            ghost.style.width = `${wrapperRef.current.offsetWidth}px`;
+            ghost.classList.add(styles["drag-ghost"]);
+
+            document.body.appendChild(ghost);
+            e.dataTransfer.setDragImage(ghost, 0, 0);
+
+            requestAnimationFrame(() => {
+                document.body.removeChild(ghost);
+            });
+        }
+    };
+
+    const handleDragEnd = () => {
+        setIsDragging(false);
+        setDropPosition(null);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDropPosition(null);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        e.dataTransfer.dropEffect = "move";
+
+        const rect = wrapperRef.current!.getBoundingClientRect();
+        const offsetY = e.clientY - rect.top;
+
+        if (offsetY < rect.height / 2) {
+            setDropPosition(null);
+        } else {
+            setDropPosition("bottom");
+        }
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        if (wrapperRef.current && !wrapperRef.current.contains(e.relatedTarget as Node)) {
+            setDropPosition(null);
+        }
+    };
+
+    return (
+        <div
+            ref={wrapperRef}
+            className={`${styles["block-wrapper"]} ${
+                dropPosition ? styles[`drop-${dropPosition}`] : ""
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            data-block-id={blockId}
+        >
+            <div className={styles["extra-hover-zone"]} />
+            <div
+                className={`${styles["drag-icon"]} ${isDragging ? styles["hidden"] : ""}`}
+                draggable
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+            >
+                <DotsSixVerticalIcon size={21} />
+            </div>
+            {children}
+        </div>
+    );
 }

@@ -16,7 +16,7 @@ const BlockFactory = memo(({ block, autoFocus, onMeasured }: BlockFactoryProps) 
     switch (block.blockType) {
         default:
             return (
-                <BlockWrapper>
+                <BlockWrapper blockId={block.id}>
                     <TextBlock
                         block={block}
                         addBlockBelow={addBlockBelow}
