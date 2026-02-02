@@ -1,6 +1,7 @@
 import styles from "./BlockWrapper.module.css";
 import React, { ReactNode, useRef, useState } from "react";
 import { DotsSixVerticalIcon } from "@phosphor-icons/react";
+import { useDrag } from "@/app/context/DragContext";
 
 interface BlockWrapperProps {
     children: ReactNode;
@@ -11,9 +12,13 @@ export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [dropPosition, setDropPosition] = useState<"top" | "bottom" | null>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const { draggingBlockId, setDraggingBlockId } = useDrag();
+
+    const isSelfDragging = draggingBlockId === blockId;
 
     const handleDragStart = (e: React.DragEvent) => {
         setIsDragging(true);
+        setDraggingBlockId(blockId);
 
         e.dataTransfer.setData("text/plain", blockId);
         e.dataTransfer.effectAllowed = "move";
@@ -37,6 +42,7 @@ export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
 
     const handleDragEnd = () => {
         setIsDragging(false);
+        setDraggingBlockId(null);
         setDropPosition(null);
     };
 
@@ -49,6 +55,11 @@ export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (draggingBlockId === blockId) {
+            setDropPosition(null);
+            return;
+        }
 
         e.dataTransfer.dropEffect = "move";
 

@@ -4,7 +4,6 @@ import styles from "./NoteEditor.module.css";
 import { useBlocks } from "@/app/components/NoteEditor/hooks/useBlocks";
 import VirtualizedBlocks from "@/app/components/NoteEditor/blocks/VirtualizedBlocks";
 import { BlockActionsProvider } from "@/app/context/BlockActionsContext";
-import BlockFactory from "@/app/components/NoteEditor/blocks/BlockFactory";
 
 export default function NoteEditor({ note, scrollContainerRef }: { note: Note, scrollContainerRef: React.RefObject<HTMLDivElement | null> }) {
 	const { blocks, addBlockBelow, focusedBlockId, updateBlockContent, setFocusedBlockId } = useBlocks(note.id);
@@ -19,13 +18,11 @@ export default function NoteEditor({ note, scrollContainerRef }: { note: Note, s
 			}}
 		>
 			<div className={styles["note-editor"]}>
-				{blocks.map(block => (
-					<BlockFactory
-						key={block.id}
-						block={block}
-						autoFocus={block.id === focusedBlockId}
-					/>
-				))}
+				<VirtualizedBlocks
+					blocks={blocks}
+					scrollContainerRef={scrollContainerRef}
+					focusedBlockId={focusedBlockId}
+				/>
 			</div>
 		</BlockActionsProvider>
 	);
