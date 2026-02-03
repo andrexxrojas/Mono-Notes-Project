@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useLayoutEffect, useState } from "react";
+import React, { useMemo, useRef, useLayoutEffect, useState, useEffect, useCallback } from "react";
 import { Note } from "@/app/type/electron";
 import styles from "./NoteEditor.module.css";
 import { useBlocks } from "@/app/components/NoteEditor/hooks/useBlocks";
@@ -20,6 +20,7 @@ function NoteEditorContent({ note }: { note: Note }) {
 	const blockRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 	const [gapPositions, setGapPositions] = useState<number[]>([]);
 	const editorRef = useRef<HTMLDivElement>(null);
+	const rafIdRef = useRef<number | null>(null);
 
 	const draggingIndex = useMemo(() => {
 		if (!draggingBlockId) return -1;
@@ -36,13 +37,11 @@ function NoteEditorContent({ note }: { note: Note }) {
 		return true;
 	};
 
-	useLayoutEffect(() => {
+	const calculateGapPositions = useCallback(() => {
 		const positions: number[] = [];
 
 		if (blocks.length === 0) {
-			requestAnimationFrame(() => {
-				setGapPositions([]);
-			});
+			setGapPositions([]);
 			return;
 		}
 
@@ -69,10 +68,41 @@ function NoteEditorContent({ note }: { note: Note }) {
 			positions[blocks.length] = lastBlockBottom + remainingSpace / 2;
 		}
 
-		requestAnimationFrame(() => {
-			setGapPositions(positions);
-		});
+		setGapPositions(positions);
 	}, [blocks]);
+
+	const scheduleGapRecalculation = useCallback(() => {
+		if (rafIdRef.current !== null) {
+			cancelAnimationFrame(rafIdRef.current);
+		}
+		rafIdRef.current = requestAnimationFrame(() => {
+			calculateGapPositions();
+			rafIdRef.current = null;
+		});
+	}, [calculateGapPositions]);
+
+	useEffect(() => {
+		const resizeObserver = new ResizeObserver(() => {
+			scheduleGapRecalculation();
+		});
+
+		blockRefs.current.forEach((el) => {
+			resizeObserver.observe(el);
+		});
+
+		return () => {
+			resizeObserver.disconnect();
+			if (rafIdRef.current !== null) {
+				cancelAnimationFrame(rafIdRef.current);
+			}
+		};
+	}, [blocks, scheduleGapRecalculation]);
+
+	useLayoutEffect(() => {
+		requestAnimationFrame(() => {
+			calculateGapPositions();
+		})
+	}, [calculateGapPositions]);
 
 	return (
 		<BlockActionsProvider
