@@ -36,5 +36,6 @@ contextBridge.exposeInMainWorld("electron", {
         addBlockBelow: (nodeId, currentBlockId, blockType, content) => db.addBlockBelow(nodeId, currentBlockId, blockType, content),
         updateBlock: (blockId, content) => db.updateBlock(blockId, content),
         getBlocks: (noteId) => db.getBlocks(noteId),
+        reorderBlock: (draggedId, newPrevId, newNextid) => db.reorderBlock(draggedId, newPrevId, newNextid)
     },
 });

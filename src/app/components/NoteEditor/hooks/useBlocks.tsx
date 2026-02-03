@@ -104,6 +104,59 @@ export function useBlocks(noteId: string) {
         setBlocks(prev => prev.filter(b => b.id !== blockId));
     }, []);
 
+    const reorderBlock = useCallback((draggedId: string, targetIndex: number) => {
+        const map = blocksMapRef.current;
+        const dragged = map.get(draggedId);
+        if (!dragged) return;
+
+        const currentOrder = blocks.map(b => b.id);
+        const fromIndex = currentOrder.indexOf(draggedId);
+        if (fromIndex === -1) return;
+        if (fromIndex === targetIndex || fromIndex + 1 === targetIndex) return;
+
+        const oldPrevId = dragged.prevId;
+        const oldNextId = dragged.nextId;
+
+        if (oldPrevId) {
+            const oldPrev = map.get(oldPrevId);
+            if (oldPrev) map.set(oldPrevId, { ...oldPrev, nextId: oldNextId });
+        }
+        if (oldNextId) {
+            const oldNext = map.get(oldNextId);
+            if (oldNext) map.set(oldNextId, { ...oldNext, prevId: oldPrevId });
+        }
+
+        let insertIndex = targetIndex;
+        if (fromIndex < targetIndex) {
+            insertIndex = targetIndex - 1;
+        }
+
+        const newOrderIds = [...currentOrder];
+        newOrderIds.splice(fromIndex, 1);
+        newOrderIds.splice(insertIndex, 0, draggedId);
+
+        const newPrevId = newOrderIds[insertIndex - 1] ?? undefined;
+        const newNextId = newOrderIds[insertIndex + 1] ?? undefined;
+
+        map.set(draggedId, { ...dragged, prevId: newPrevId, nextId: newNextId });
+
+        if (newPrevId) {
+            const prev = map.get(newPrevId);
+            if (prev) map.set(newPrevId, { ...prev, nextId: draggedId });
+        }
+        if (newNextId) {
+            const next = map.get(newNextId);
+            if (next) map.set(newNextId, { ...next, prevId: draggedId });
+        }
+
+        const newBlocks = [...blocks];
+        newBlocks.splice(fromIndex, 1);
+        newBlocks.splice(insertIndex, 0, dragged);
+        setBlocks(newBlocks);
+
+        window.electron.notes.reorderBlock(draggedId, newPrevId, newNextId);
+    }, [blocks]);
+
     return {
         blocks,
         focusedBlockId,
@@ -111,5 +164,6 @@ export function useBlocks(noteId: string) {
         updateBlockContent,
         addBlockBelow,
         removeBlock,
+        reorderBlock,
     };
 }

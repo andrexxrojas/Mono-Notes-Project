@@ -176,6 +176,50 @@ impl NotesDb {
     }
 
     #[napi]
+    pub fn reorder_block(&self, dragged_id: String, new_prev_id: Option<String>, new_next_id: Option<String>) -> napi::Result<()> {
+        let conn = self.conn.lock().unwrap();
+
+        let (old_prev_id, old_next_id): (Option<String>, Option<String>) = conn.query_row(
+            "SELECT prev_id, next_id FROM blocks WHERE id = ?1",
+            params![&dragged_id],
+            |row| Ok((row.get(0)?, row.get(1)?))
+        ).map_err(to_napi_error)?;
+
+        if let Some(old_prev) = &old_prev_id {
+            conn.execute(
+                "UPDATE blocks SET next_id = ?1 WHERE id = ?2",
+                params![old_next_id, old_prev]
+            ).map_err(to_napi_error)?;
+        }
+        if let Some(old_next) = &old_next_id {
+            conn.execute(
+                "UPDATE blocks SET prev_id = ?1 WHERE id = ?2",
+                params![old_prev_id, old_next]
+            ).map_err(to_napi_error)?;
+        }
+
+        conn.execute(
+            "UPDATE blocks SET prev_id = ?1, next_id = ?2 WHERE id = ?3",
+            params![new_prev_id, new_next_id, dragged_id]
+        ).map_err(to_napi_error)?;
+
+        if let Some(prev_id) = &new_prev_id {
+            conn.execute(
+                "UPDATE blocks SET next_id = ?1 WHERE id = ?2",
+                params![dragged_id, prev_id]
+            ).map_err(to_napi_error)?;
+        }
+        if let Some(next_id) = &new_next_id {
+            conn.execute(
+                "UPDATE blocks SET prev_id = ?1 WHERE id = ?2",
+                params![dragged_id, next_id]
+            ).map_err(to_napi_error)?;
+        }
+
+        Ok(())
+    }
+
+    #[napi]
     pub fn get_blocks(&self, note_id: String) -> napi::Result<Vec<Block>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare("SELECT id, note_id, type, content, prev_id, next_id FROM blocks WHERE note_id = ?1")

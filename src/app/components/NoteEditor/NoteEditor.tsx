@@ -14,6 +14,7 @@ function NoteEditorContent({ note }: { note: Note }) {
 		focusedBlockId,
 		updateBlockContent,
 		setFocusedBlockId,
+		reorderBlock
 	} = useBlocks(note.id);
 
 	const { draggingBlockId } = useDrag();
@@ -122,6 +123,7 @@ function NoteEditorContent({ note }: { note: Note }) {
 								top={gapPositions[i]}
 								enabled={isGapEnabled(i)}
 								targetBlock={block}
+								onReorder={reorderBlock}
 							/>
 						)}
 
@@ -144,6 +146,7 @@ function NoteEditorContent({ note }: { note: Note }) {
 						top={gapPositions[blocks.length]}
 						enabled={isGapEnabled(blocks.length)}
 						targetBlock={null}
+						onReorder={reorderBlock}
 					/>
 				)}
 			</div>

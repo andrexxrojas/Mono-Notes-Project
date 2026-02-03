@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./DropGap.module.css";
 import { useDrag } from "@/app/context/DragContext";
+import { useBlocks } from "@/app/components/NoteEditor/hooks/useBlocks";
 import { Block } from "@/app/type/electron";
 
 interface DropGapProps {
@@ -8,9 +9,10 @@ interface DropGapProps {
     top: number;
     enabled: boolean;
     targetBlock: Block | null;
+    onReorder: (draggedId: string, targetIndex: number) => void;
 }
 
-export default function DropGap({ index, top, enabled, targetBlock }: DropGapProps) {
+export default function DropGap({ index, top, enabled, targetBlock, onReorder }: DropGapProps) {
     const {
         draggingBlockId,
         hoveredGapIndex,
@@ -32,6 +34,12 @@ export default function DropGap({ index, top, enabled, targetBlock }: DropGapPro
         }
     };
 
+    const handleDrop = () => {
+        if (!enabled || !draggingBlockId) return;
+
+        onReorder(draggingBlockId, index);
+    }
+
     return (
         <div
             className={styles["drop-zone"]}
@@ -42,6 +50,7 @@ export default function DropGap({ index, top, enabled, targetBlock }: DropGapPro
                     setHoveredGapIndex(null);
                 }
             }}
+            onDrop={handleDrop}
         >
             <div
                 className={`${styles["indicator"]} ${
