@@ -10,9 +10,13 @@ interface BlockWrapperProps {
 
 export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
-    const [dropPosition, setDropPosition] = useState<"top" | "bottom" | null>(null);
     const [isDragging, setIsDragging] = useState(false);
-    const { draggingBlockId, setDraggingBlockId } = useDrag();
+
+    const {
+        draggingBlockId,
+        setDraggingBlockId,
+        setHoveredGapIndex,
+    } = useDrag();
 
     const isSelfDragging = draggingBlockId === blockId;
 
@@ -25,6 +29,7 @@ export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
 
         if (wrapperRef.current) {
             const ghost = wrapperRef.current.cloneNode(true) as HTMLElement;
+
             ghost.style.position = "absolute";
             ghost.style.top = "-9999px";
             ghost.style.left = "-9999px";
@@ -43,62 +48,30 @@ export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
     const handleDragEnd = () => {
         setIsDragging(false);
         setDraggingBlockId(null);
-        setDropPosition(null);
-    };
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDropPosition(null);
-    };
-
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (draggingBlockId === blockId) {
-            setDropPosition(null);
-            return;
-        }
-
-        e.dataTransfer.dropEffect = "move";
-
-        const rect = wrapperRef.current!.getBoundingClientRect();
-        const offsetY = e.clientY - rect.top;
-
-        if (offsetY < rect.height / 2) {
-            setDropPosition(null);
-        } else {
-            setDropPosition("bottom");
-        }
-    };
-
-    const handleDragLeave = (e: React.DragEvent) => {
-        if (wrapperRef.current && !wrapperRef.current.contains(e.relatedTarget as Node)) {
-            setDropPosition(null);
-        }
+        setHoveredGapIndex(null);
     };
 
     return (
         <div
             ref={wrapperRef}
             className={`${styles["block-wrapper"]} ${
-                dropPosition ? styles[`drop-${dropPosition}`] : ""
+                isSelfDragging ? styles["dragging"] : ""
             }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
             data-block-id={blockId}
         >
             <div className={styles["extra-hover-zone"]} />
+
             <div
-                className={`${styles["drag-icon"]} ${isDragging ? styles["hidden"] : ""}`}
+                className={`${styles["drag-icon"]} ${
+                    isDragging ? styles["hidden"] : ""
+                }`}
                 draggable
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
                 <DotsSixVerticalIcon size={21} />
             </div>
+
             {children}
         </div>
     );

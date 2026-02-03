@@ -1,0 +1,26 @@
+.drop-zone {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 16px;
+    transform: translateY(-50%);
+    pointer-events: auto;
+    z-index: 10;
+
+    background-color: green;
+}
+
+.indicator {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    height: 4px;
+    transform: translateY(-50%);
+    background: transparent;
+    transition: background-color 120ms ease;
+}
+
+.indicator.active {
+    background-color: #A0CAF2;
+}
