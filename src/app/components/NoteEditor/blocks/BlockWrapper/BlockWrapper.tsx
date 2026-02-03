@@ -71,8 +71,9 @@ export default function BlockWrapper({ children, blockId }: BlockWrapperProps) {
             >
                 <DotsSixVerticalIcon size={21} />
             </div>
-
-            {children}
+            <div style={{ pointerEvents: draggingBlockId ? 'none' : 'auto' }}>
+                {children}
+            </div>
         </div>
     );
 }
